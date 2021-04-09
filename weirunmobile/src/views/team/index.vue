@@ -30,7 +30,7 @@
                 <span><img src="../../assets/images/wallet/7.png"></span>
                 <span>推广名片</span>
             </div>
-            <div @click="$router.push('')">
+            <div @click="$router.push('/team/teamlist')">
                 <span><img src="../../assets/images/wallet/8.png"></span>
                 <span>推广统计</span>
             </div>

@@ -30,6 +30,12 @@ const routes = [
         component:()=>import("../views/team/card")
     },
     {
+        path:'/team/teamlist',
+        name: 'TeamList',
+        meta: { title: "", tabbar: true, auth: false },
+        component:()=>import("../views/team/teamlist")
+    },
+    {
         path:'/public/oauth',
         name: 'Oauth',
         meta: { title: "", tabbar: false, auth: false },
