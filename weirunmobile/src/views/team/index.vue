@@ -18,15 +18,15 @@
                     <span>累计收益(元)：<span>999</span></span>
                 </div>
                 <div>
-                  <a>提现记录</a>
-                  <a>立即提现</a>
+                  <a @click="$router.push('/ucenter/bill/cashlist')">提现记录</a>
+                  <a @click="$router.push('/ucenter/withdraw')">立即提现</a>
                 </div>
             </div>
         </div>
 
 
         <div class="guide">
-            <div @click="$router.push('')">
+            <div @click="$router.push('/team/card')">
                 <span><img src="../../assets/images/wallet/7.png"></span>
                 <span>推广名片</span>
             </div>
@@ -68,6 +68,9 @@
         created() {
         },
         methods: {
+            prev(){
+                this.$tools.prev();
+            }
         }
     }
 </script>

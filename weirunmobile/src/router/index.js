@@ -24,6 +24,12 @@ const routes = [
         component:()=>import("../views/team/index")
     },
     {
+        path:'/team/card',
+        name: 'TeamCard',
+        meta: { title: "", tabbar: true, auth: false },
+        component:()=>import("../views/team/card")
+    },
+    {
         path:'/public/oauth',
         name: 'Oauth',
         meta: { title: "", tabbar: false, auth: false },
@@ -305,7 +311,8 @@ const routes = [
         redirect: '/',
         meta: { title: "", tabbar: true, auth: false },
         component: Home
-    }
+    },
+
 ]
 
 const router = new VueRouter({

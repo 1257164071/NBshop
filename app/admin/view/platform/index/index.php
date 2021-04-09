@@ -227,7 +227,7 @@
                     '    </div>';
             }
             if(html != ""){
-                $("#a3mall-recommend-box").html(html);
+                // $("#a3mall-recommend-box").html(html);
             }
         }
     })();
