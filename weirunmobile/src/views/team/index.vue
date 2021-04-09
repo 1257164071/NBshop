@@ -32,9 +32,9 @@
             </div>
             <div @click="$router.push('/team/teamlist')">
                 <span><img src="../../assets/images/wallet/8.png"></span>
-                <span>推广统计</span>
+                <span>推广人员</span>
             </div>
-            <div @click="$router.push('')">
+            <div @click="$router.push('/team/moneydetail')">
                 <span><img src="../../assets/images/wallet/9.png"></span>
                 <span>佣金明细</span>
             </div>
