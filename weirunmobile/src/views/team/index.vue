@@ -17,7 +17,7 @@
                     <span>|</span>
                     <span>累计收益(元)：<span>999</span></span>
                 </div>
-                <div>
+                <div style="display: none">
                   <a @click="$router.push('/ucenter/bill/cashlist')">提现记录</a>
                   <a @click="$router.push('/ucenter/withdraw')">立即提现</a>
                 </div>
@@ -38,17 +38,17 @@
                 <span><img src="../../assets/images/wallet/9.png"></span>
                 <span>佣金明细</span>
             </div>
-            <div @click="$router.push('')">
+            <div @click="$router.push('/team/ranking')">
                 <span><img src="../../assets/images/wallet/10.png"></span>
-                <span>推广订单</span>
-            </div>
-            <div @click="$router.push('')">
-                <span><img src="../../assets/images/wallet/9.png"></span>
                 <span>推广排名</span>
             </div>
-            <div @click="$router.push('')">
+            <div @click="$router.push('/ucenter/bill/cashlist')">
                 <span><img src="../../assets/images/wallet/10.png"></span>
-                <span>佣金排名</span>
+                <span>提现记录</span>
+            </div>
+            <div @click="$router.push('/ucenter/withdraw')">
+                <span><img src="../../assets/images/wallet/9.png"></span>
+                <span>立即提现</span>
             </div>
         </div>
     </div>

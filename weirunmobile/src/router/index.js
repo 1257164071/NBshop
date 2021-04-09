@@ -42,6 +42,12 @@ const routes = [
         component:()=>import("../views/team/moneydetail")
     },
     {
+        path:'/team/ranking',
+        name: 'MoneyDetail',
+        meta: { title: "", tabbar: true, auth: false },
+        component:()=>import("../views/team/ranking")
+    },
+    {
         path:'/public/oauth',
         name: 'Oauth',
         meta: { title: "", tabbar: false, auth: false },
