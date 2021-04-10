@@ -10,6 +10,7 @@ namespace app\api\controller\wap;
 
 use app\common\model\custom\Pages;
 use mall\basic\Setting;
+use mall\response\Response;
 use mall\utils\Tool;
 use think\facade\Db;
 use think\facade\Request;
@@ -17,6 +18,43 @@ use think\facade\Request;
 class Index extends Base {
 
     public function index(){
+        /*
+         * 首次消费
+         * 购买99元给上级7级返利
+         * 7级若满足对应会员等级 即可获得拿钱条件
+         * 1级 无条件获得
+         * 2级3级  需要分享2单
+         * 4级5级  需要分享4单
+         * 6级7级  需要分享7单
+         *
+         * 数据结构
+         * 不同级别能否获得钱数 取决于直推用户第一次购买的有多少
+         * 获得多少钱数取决于 直推用户级别
+         * 根据USER表 is_consumption 确定是否已第一次购买
+         *
+         *
+         *
+         */
+//        $group_id = Db::name("users_group")->order('minexp','ASC')->value("id");
+//
+//        $data = [
+//            "group_id"=>$group_id,
+//            "username"=>'ffdxxxfx',
+//            "mobile"=>'18716251981',
+//            "password"=>md5(123456),
+//            "status"=>0,
+//            "create_ip"=>Request::ip(),
+//            "last_ip"=>Request::ip(),
+//            "create_time"=>time(),
+//            "last_login"=>time(),
+//            "parent_id"=>17,
+//        ];
+//
+//        $user = new \app\common\model\users\Users;
+//        $res = $user->save($data);
+//dump($res);
+//        die;
+        dump(\app\common\model\users\Users::find(19)->path_ids);die;
         $banner = Db::name("data")->where("sign","banner")->find();
         $slider = array_map(function($res){
             return Tool::thumb($res["photo"],"",true);

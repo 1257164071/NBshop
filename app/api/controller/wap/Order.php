@@ -261,8 +261,8 @@ class Order extends Base {
                     return $res["cart_id"];
                 },$cart));
             }
-
             Promotion::updateStatus($data);
+
         }catch (\Exception $e){
             return $this->returnAjax($e->getMessage(),$e->getCode() > 0 ? 1 : 0);
         }

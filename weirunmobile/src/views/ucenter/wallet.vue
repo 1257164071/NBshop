@@ -13,8 +13,8 @@
                 <div>总资产(元)</div>
                 <div>{{amount}}</div>
                 <div>
-                    <span>累计充值(元)：{{rechange_amount||"0.00"}}</span>
-                    <span>|</span>
+<!--                    <span>累计充值(元)：{{rechange_amount||"0.00"}}</span>-->
+<!--                    <span>|</span>-->
                     <span>累计消费(元)：{{consume_amount||"0.00"}}</span>
                 </div>
             </div>
