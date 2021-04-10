@@ -9,6 +9,7 @@
 namespace app\api\controller\wap;
 
 use app\common\model\custom\Pages;
+use dh2y\qrcode\QRcode;
 use mall\basic\Setting;
 use mall\response\Response;
 use mall\utils\Tool;
@@ -18,6 +19,19 @@ use think\facade\Request;
 class Index extends Base {
 
     public function index(){
+
+
+//        $code = new QRcode();
+//        $code_path =  $code->png('http://lifeng.dichangshangmao.com/public/login?parent_i=2121',false,7)        //生成二维码
+////            ->logo('https://thirdwx.qlogo.cn/mmopen/vi_32/ib10rznyxX8QoMZBng3Aa3LQIQehvjoBUpq34OyVyx0ibUCxpewPm5FicSOCthiau5iaS92OxBiavLHfMU2WHx8WP61g/132')
+//            ->background(240,200,'static/images/bg.jpg')
+//            ->text('我是<哲生>',40,['center',1020],'#999999')
+//            ->text('微信扫描或二维码或长按识别',30,['center',1100],'#999999')
+//            ->getPath();
+//
+//        dump($code_path);
+//        die;
+
         /*
          * 首次消费
          * 购买99元给上级7级返利

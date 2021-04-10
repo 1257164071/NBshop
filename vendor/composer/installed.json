@@ -287,6 +287,56 @@
             "install-path": "../danielstjules/stringy"
         },
         {
+            "name": "dh2y/think-qrcode",
+            "version": "2.0",
+            "version_normalized": "2.0.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/cinaofdai/think-qrcode.git",
+                "reference": "977d032afa27b1852f5fc5441fad2497f6db7ff5"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/cinaofdai/think-qrcode/zipball/977d032afa27b1852f5fc5441fad2497f6db7ff5",
+                "reference": "977d032afa27b1852f5fc5441fad2497f6db7ff5",
+                "shasum": "",
+                "mirrors": [
+                    {
+                        "url": "https://mirrors.aliyun.com/composer/dists/%package%/%reference%.%type%",
+                        "preferred": true
+                    }
+                ]
+            },
+            "require": {
+                "php": ">=5.4.0"
+            },
+            "time": "2019-07-10T02:57:29+00:00",
+            "type": "library",
+            "installation-source": "dist",
+            "autoload": {
+                "psr-4": {
+                    "dh2y\\qrcode\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "dh2y",
+                    "email": "xiaodai54_long@163.com"
+                }
+            ],
+            "description": "qrcode for thinkphp5",
+            "homepage": "https://github.com/cinaofdai/think-qrcode",
+            "support": {
+                "issues": "https://github.com/cinaofdai/think-qrcode/issues",
+                "source": "https://github.com/cinaofdai/think-qrcode/tree/2.0"
+            },
+            "install-path": "../dh2y/think-qrcode"
+        },
+        {
             "name": "endroid/qr-code",
             "version": "1.9.3",
             "version_normalized": "1.9.3.0",

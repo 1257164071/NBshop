@@ -6,7 +6,7 @@
     'aliases' => 
     array (
     ),
-    'reference' => '4ea89638be924299b67e85d70bfa1d9a4dc41445',
+    'reference' => 'f9df17858df8fb9498a61551eabdcc59be0530d0',
     'name' => 'topthink/think',
   ),
   'versions' => 
@@ -46,6 +46,15 @@
       array (
       ),
       'reference' => 'df24ab62d2d8213bbbe88cc36fc35a4503b4bd7e',
+    ),
+    'dh2y/think-qrcode' => 
+    array (
+      'pretty_version' => '2.0',
+      'version' => '2.0.0.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '977d032afa27b1852f5fc5441fad2497f6db7ff5',
     ),
     'endroid/qr-code' => 
     array (
@@ -284,7 +293,7 @@
       'aliases' => 
       array (
       ),
-      'reference' => '4ea89638be924299b67e85d70bfa1d9a4dc41445',
+      'reference' => 'f9df17858df8fb9498a61551eabdcc59be0530d0',
     ),
     'topthink/think-captcha' => 
     array (

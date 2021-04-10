@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "1cc8c1fbbb1d31871ad9a0d7e576f1fa",
+    "content-hash": "ea20505e7690f0ab60a4fa6811e3c205",
     "packages": [
         {
             "name": "adbario/php-dot-notation",
@@ -279,6 +279,53 @@
                 "source": "https://github.com/danielstjules/Stringy"
             },
             "time": "2017-06-12T01:10:27+00:00"
+        },
+        {
+            "name": "dh2y/think-qrcode",
+            "version": "2.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/cinaofdai/think-qrcode.git",
+                "reference": "977d032afa27b1852f5fc5441fad2497f6db7ff5"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/cinaofdai/think-qrcode/zipball/977d032afa27b1852f5fc5441fad2497f6db7ff5",
+                "reference": "977d032afa27b1852f5fc5441fad2497f6db7ff5",
+                "shasum": "",
+                "mirrors": [
+                    {
+                        "url": "https://mirrors.aliyun.com/composer/dists/%package%/%reference%.%type%",
+                        "preferred": true
+                    }
+                ]
+            },
+            "require": {
+                "php": ">=5.4.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "dh2y\\qrcode\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "dh2y",
+                    "email": "xiaodai54_long@163.com"
+                }
+            ],
+            "description": "qrcode for thinkphp5",
+            "homepage": "https://github.com/cinaofdai/think-qrcode",
+            "support": {
+                "issues": "https://github.com/cinaofdai/think-qrcode/issues",
+                "source": "https://github.com/cinaofdai/think-qrcode/tree/2.0"
+            },
+            "time": "2019-07-10T02:57:29+00:00"
         },
         {
             "name": "endroid/qr-code",
