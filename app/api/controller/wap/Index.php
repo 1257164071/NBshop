@@ -54,7 +54,6 @@ class Index extends Base {
 //        $res = $user->save($data);
 //dump($res);
 //        die;
-        dump(\app\common\model\users\Users::find(19)->path_ids);die;
         $banner = Db::name("data")->where("sign","banner")->find();
         $slider = array_map(function($res){
             return Tool::thumb($res["photo"],"",true);
