@@ -10,39 +10,6 @@
 <section class="content clearfix">
     <div class="layui-list-box">
 
-        <div class="layui-col-md12" style="margin-bottom: 15px;">
-            <div class="layui-card">
-                <div class="layui-card-header">产品信息</div>
-                <div class="layui-card-body">
-                    <table class="layui-table">
-                        <tbody>
-                        <tr>
-                            <td colspan='2'>产品名称：A3Mall</td>
-                        </tr>
-                        <tr>
-                            <td style="width: 50%;">程序版本：{$Think.config.base.app_version}</td>
-                            <td>ThinkPHP版本	：{$think_ver}</td>
-                        </tr>
-                        <tr>
-                            <td>项目地址：<a href="https://gitee.com/xzncit/A3Mall">gitee</a>&nbsp;<a href="https://github.com/xzncit/A3Mall">github</a></td>
-                            <td>BUG反馈：<a href="https://gitee.com/xzncit/A3Mall">gitee</a></td>
-                        </tr>
-                        <tr>
-                            <td>团队官网：<a href="http://www.a3-mall.com">http://www.a3-mall.com</a></td>
-                            <td>开发团队：A3Mall</td>
-                        </tr>
-                        <tr>
-                            <td colspan='2'>官方QQ群：
-                                <a href="#" target="_blank">
-                                    <a target="_blank" href="//shang.qq.com/wpa/qunwpa?idkey=de316f1a1dbf61859529484891ee50369e3c2bc6fe37e15bb94f8bf731cc3482"><img style="height:18px;width:auto" border="0" src="//pub.idqqimg.com/wpa/images/group.png" alt="A3Mall - 官方交流群" title="A3Mall - 官方交流群"></a>
-                                </a>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
 
         <div class="layui-col-md12">
             <div class="layui-card">

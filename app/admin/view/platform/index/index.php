@@ -217,17 +217,17 @@
 </section>
 <script>
     (function (){
-        if(a3mallRecommend != undefined && a3mallRecommend.length){
+        if(A3MALLRecommend != undefined && A3MALLRecommend.length){
             var html = "";
-            for(var obj in a3mallRecommend){
-                var recommend = a3mallRecommend[obj];
+            for(var obj in A3MALLRecommend){
+                var recommend = A3MALLRecommend[obj];
                 html += '<div class="callout '+recommend.type+'">' +
                     '        <a '+(recommend.target == 1 ? " target='_blank' " : "")+' href="'+recommend.url+'"><h4>'+recommend.title+'</h4>' +
                     '        <p>'+recommend.content+'</p></a>' +
                     '    </div>';
             }
             if(html != ""){
-                // $("#a3mall-recommend-box").html(html);
+                // $("#卫润商城-recommend-box").html(html);
             }
         }
     })();

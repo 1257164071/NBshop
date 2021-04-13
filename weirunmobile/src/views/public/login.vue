@@ -10,7 +10,7 @@
         <div class="wrap">
             <div class="top">
                 <div class="title">A3Mall</div>
-                <div class="ctitle">素烟姿</div>
+<!--                <div class="ctitle">素烟姿</div>-->
             </div>
 
             <van-form @submit="onSubmit">

@@ -4,8 +4,8 @@
             <div class="top-wrap">
                 <div class="header">
                     <div class="logo">
-                        <span>A3Mall</span>
-                        <span>素烟姿</span>
+                        <span>卫润商城</span>
+<!--                        <span>素烟姿</span>-->
                     </div>
                     <div class="cart" @click="$router.push('/cart/index')"></div>
                 </div>
@@ -251,6 +251,7 @@
             padding-right: 8px;
             position: relative;
         }
+        /*
         span:first-child:after {
             border-right: 1px solid #dc8c91;
             width: 1px;
@@ -265,6 +266,8 @@
             font-size: 19px;
             padding-left: 8px;
         }
+
+         */
     }
     .cart {
         float: right;

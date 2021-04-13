@@ -1,6 +1,6 @@
 <?php
 // +----------------------------------------------------------------------
-// | A3Mall
+// | 卫润商城
 // +----------------------------------------------------------------------
 // | Copyright (c) 2020 http://www.a3-mall.com All rights reserved.
 // +----------------------------------------------------------------------
@@ -77,7 +77,7 @@ class Uploadfiy extends Auth {
             Attachments::deleteImage($path);
             return Response::returnArray("ok");
         }
-        
+
         return Response::returnArray("删除失败，请重试。",0);
     }
 

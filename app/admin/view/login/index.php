@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>A3Mall | Dashboard</title>
+    <title>卫润商城 | Dashboard</title>
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <link rel="stylesheet" href="{__SYSTEM_PATH__}/js/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="{__SYSTEM_PATH__}/font/font-awesome/css/font-awesome.min.css">
@@ -21,11 +21,11 @@
 <body class="hold-transition login-page">
     <div class="login-box">
         <div class="login-logo">
-            <a href="../../index2.html"><b>A3Mall</b></a>
+            <a href="../../index2.html"><b>卫润商城</b></a>
         </div>
 
         <div class="login-box-body">
-            <p class="login-box-msg">欢迎使用A3Mall商城系统！</p>
+            <p class="login-box-msg">欢迎使用卫润商城商城系统！</p>
 
             <form action="" id="theForm" method="post">
                 <div class="form-group has-feedback">

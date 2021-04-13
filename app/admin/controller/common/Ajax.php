@@ -1,6 +1,6 @@
 <?php
 // +----------------------------------------------------------------------
-// | A3Mall
+// | 卫润商城
 // +----------------------------------------------------------------------
 // | Copyright (c) 2020 http://www.a3-mall.com All rights reserved.
 // +----------------------------------------------------------------------
@@ -103,66 +103,66 @@ class Ajax extends Auth {
 
     public function get_area(){
         $id = Request::get("id","0","intval");
-        
+
         if($id <= 0){
             return Response::returnArray('请求出错！',0);
         }
-        
+
         $result = Db::name('area')->where(['pid'=>$id])->select()->toArray();
-        
+
         $string = '<option value="">请选择</option>';
         foreach($result as $val){
             $string .= '<option value="'.$val['id'].'">'.$val['name'].'</option>';
         }
-        
+
         return Response::returnArray('ok',1,$string);
     }
-    
+
     public function get_distribution(){
         $result = Db::name('area')->where(['level'=>1])->order('id ASC')->select()->toArray();
         foreach ($result as $key => $val) {
             $result[$key] = $val;
             $result[$key]['children'] = Db::name('area')->where(['pid' => $val["id"]])->select()->toArray();
         }
-        
+
         return View::fetch('common/get_distribution',['data'=>$result]);
     }
-    
+
     public function get_attr(){
         $id = Request::get("id",'0',"intval");
         $goods_id = Request::get("goods_id","0","intval");
         $result = [];
-        
+
         if(empty($id)){
             return Response::returnArray("ok",1);
         }
-        
+
         $rs = Db::name("products_attribute")->where(["pid"=>$id])->select()->toArray();
-        
+
         foreach($rs as $val){
             $result[$val['id']]["data"] = Db::name("products_attribute")->where(["id"=>$val["id"]])->find();
             $result[$val['id']]["item"] = Db::name("products_attribute_data")->where(["pid"=>$val["id"]])->order("sort ASC")->select()->toArray();
         }
-        
+
         $attr = Db::name("goods_attribute")->where(["goods_id"=>$goods_id])->select()->toArray();
         $spec_id = [];
         foreach($attr as $val){
             $spec_id[] = $val["attr_data_id"];
         }
-        
+
         $html = View::fetch("common/get_attr",[
             "spec_checked"=>$spec_id,"result"=>$result
         ]);
-        
+
         return Response::returnArray("ok",1,$html);
     }
-    
+
     public function get_attr_data(){
         $id = Request::post("id","0","strip_tags");
         $t = Request::post("t","0","intval");
         $goods_id = Request::post("goods_id","0","intval");
         $in = array_map("intval", explode(",", $id));
-        
+
         if(!$t){
             $a = [];
             $goods_attribute = Db::name("goods_attribute")->where(["goods_id"=>$goods_id])->select()->toArray();
@@ -172,7 +172,7 @@ class Ajax extends Auth {
 
             $in = array_merge($in,$a);
         }
-        
+
         $result = Db::name("products_attribute_data")->where("id",'in',$in)->order("sort ASC")->select()->toArray();
 
         if (empty($result)) {
@@ -205,7 +205,7 @@ class Ajax extends Auth {
                 }
             }
         }
-        
+
         $headArray = [];
         foreach ($table_head as $val) {
             $headArray[] = $val;
@@ -217,25 +217,25 @@ class Ajax extends Auth {
         foreach ($goods as $val) {
             $goods_temp[$val["spec_key"]] = $val;
         }
-        
+
         $html = View::fetch("common/get_attr_data",[
             "goods"=>$goods_temp,
             "head"=>$head,
             "data"=>$data
         ]);
-        
+
         return Response::returnArray("ok", 1, $html);
     }
-    
+
     public function get_model(){
         $id = Request::get("id","0","intval");
         $goods_id = Request::get("goods_id","0","intval");
-        
+
         $result = Db::name("products_model_data")->where(['pid'=>$id])->order("sort ASC")->select()->toArray();
         if(empty($result)){
             return Response::returnArray("您要查找的模型内容不存在！",0);
         }
-        
+
         $goods_attr = [];
         $module = Db::name("goods_model")->where(["model_id"=>$id,"goods_id"=>$goods_id])->order("sort ASC")->select()->toArray();
         if ($module) {
@@ -243,12 +243,12 @@ class Ajax extends Auth {
                 $goods_attr[$item['attribute_id']] = $item['attribute_value'];
             }
         }
-        
+
         $html = View::fetch("common/get_model",[
             "goods_attr"=>$goods_attr,
             "result"=>$result
         ]);
-        
+
         return Response::returnArray("ok",1,$html);
     }
 }
