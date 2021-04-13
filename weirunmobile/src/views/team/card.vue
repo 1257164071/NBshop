@@ -8,7 +8,7 @@
         @click-left="prev"
     />
     <div class="container">
-      <img src="http://127.0.0.1:8083/upload/swiper/20210224/cd11abfc840fa6b8758553a15d740cf4.jpg">
+      <img :src="url">
     </div>
   </div>
 </template>
@@ -19,7 +19,20 @@
   export default {
     name: "card",
     components: {NavBar},
+    data(){
+      return {
+        url: 'http://www.baidu.com',
+      }
+    },
+    created() {
+      this.onLoad();
+    },
     methods: {
+      onLoad(){
+        this.$http.getCardBackground().then(response => {
+          this.url = response.data.path
+        });
+      },
       prev(){
         this.$tools.prev();
       }
