@@ -41,7 +41,7 @@
                     </div>
 
                     <div class="hp-box">
-                        <span @click="goRegister">立即注册</span>
+<!--                        <span @click="goRegister">立即注册</span>-->
                         <span @click="goForget">忘记密码？</span>
                     </div>
 

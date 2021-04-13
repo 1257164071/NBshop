@@ -86,7 +86,7 @@ export default {
         };
     },
     created() {
-        // console.log(this.$route.params.id)
+        console.log(this.$route.params.id)
     },
     methods: {
         prev(){
@@ -159,10 +159,15 @@ export default {
                 return ;
             }
 
+            if(this.$route.query.parent_id === undefined){
+                Toast("没有介绍人 无法注册");
+                return ;
+            }
             let params = {
                 username: this.username,
                 password: this.password,
-                code: this.code
+                code: this.code,
+                parent_id: this.$route.query.parent_id
             }
 
             let spread_id = parseInt(this.$cookie.get("spread_id"));

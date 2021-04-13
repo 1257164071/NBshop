@@ -11,7 +11,6 @@ import * as users from './libs/Users';
 import * as http from './api/Http';
 import './assets/css/font-awesome.min.css';
 import './assets/css/iconfont.css';
-
 Vue.config.devtools = process.env.NODE_ENV === 'development'
 Vue.config.productionTip = false
 Vue.prototype.$tools = tools;

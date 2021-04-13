@@ -14,7 +14,7 @@ use think\facade\Db;
 use think\facade\Request;
 use mall\utils\Check;
 use mall\basic\Token;
-
+use app\common\model\users\Users as UserModel;
 class Users extends Base {
 
     public function login(){
@@ -81,6 +81,7 @@ class Users extends Base {
         $password = Request::param("password","","trim,strip_tags");
         $code = Request::param("code","","intval");
 
+
         if(empty($username)){
             return $this->returnAjax("请填写手机号码！",0);
         }else if(empty($password)){
@@ -95,19 +96,26 @@ class Users extends Base {
             return $this->returnAjax("请填写验证码！",0);
         }
 
-        $sms = Db::name("users_sms")
-            ->where("mobile",$username)
-            ->where("code",$code)
-            ->order("id","DESC")->find();
-        if(empty($sms)){
-            return $this->returnAjax("您填写的验证码错误",0);
+        $parent = UserModel::where(['id' => input('parent_id')])->find();
+
+        if ($parent == null){
+            return $this->returnAjax("没有介绍人 无法注册！",0);
         }
 
-        $setting = new Setting();
-        $config = $setting->getConfigData("sms");
-        if(($sms["create_time"] + (60 * $config["duration_time"])) < time()){
-            return $this->returnAjax("您的验证码己过期，请重新发送。",0);
-        }
+//
+//        $sms = Db::name("users_sms")
+//            ->where("mobile",$username)
+//            ->where("code",$code)
+//            ->order("id","DESC")->find();
+//        if(empty($sms)){
+//            return $this->returnAjax("您填写的验证码错误",0);
+//        }
+//
+//        $setting = new Setting();
+//        $config = $setting->getConfigData("sms");
+//        if(($sms["create_time"] + (60 * $config["duration_time"])) < time()){
+//            return $this->returnAjax("您的验证码己过期，请重新发送。",0);
+//        }
 
         if(Db::name("users")->where("mobile",$username)->count()){
             return $this->returnAjax("您填写的手机号码己存在！",0);
@@ -124,13 +132,15 @@ class Users extends Base {
             "create_ip"=>Request::ip(),
             "last_ip"=>Request::ip(),
             "create_time"=>time(),
-            "last_login"=>time()
+            "last_login"=>time(),
+            'parent_id' => input('parent_id')
         ];
+        $user = new UserModel;
+        $user->save($data);
 
-        Db::name("users")->insert($data);
-
-        $user_id = Db::name("users")->getLastInsID();
+        $user_id = $user->id;
         $token = Token::set($user_id);
+
         Db::name("users_sms")->where("mobile",$username)->delete();
 
         $info = \mall\basic\Users::info($user_id);
