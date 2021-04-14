@@ -87,6 +87,8 @@ Route::group(function(){
     Route::post('ucenter/settlement_save', 'api/wap.ucenter/settlement_save');
     Route::post('ucenter/avatar', 'api/wap.ucenter/avatar');
     Route::get('team/poster', 'api/wap.team/poster');
+    Route::get('team/share', 'api/wap.team/share');
+
 })->middleware(AllowOrigin::class)->middleware(VerifyToken::class);
 
 Route::miss(function(){

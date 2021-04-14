@@ -10,6 +10,7 @@
 namespace app\common\model\users;
 
 use app\common\model\base\A3Mall;
+use think\Db;
 
 class Users extends A3Mall{
 
@@ -78,6 +79,9 @@ class Users extends A3Mall{
             $user->path = '-';
         } else {
             $user->path = $user['parent']->path.$user->parent_id.'-';
+        }
+        foreach ($user->ancestors as $item){
+            $item->inc('num')->update();
         }
     }
     public function getList($condition=[],$size=10){

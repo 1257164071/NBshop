@@ -721,3 +721,12 @@ export function getCardBackground(params) {
         })
     })
 }
+export function getShareList(params) {
+    return new Promise((resolve, reject) => {
+        request.get("/team/share",params).then((res)=>{
+            resolve(res)
+        }).catch(err=>{
+            reject(err)
+        });
+    })
+}

@@ -9,7 +9,7 @@
         />
 
         <div class="top">
-            <span>总推广人数：10 人</span>
+            <span>总推广人数：{{num}} 人</span>
         </div>
 
         <div class="list-wrap">
@@ -23,29 +23,32 @@
             >
 
                 <div class="list-box clear">
-                    <div class="list-item clear" v-for="(item, index) in list" :key="index">
+                    <div class="list-item clear" v-for="(item, index) in list" :key="index" @click="goParent(item.id)">
                         <div class="box">
                           <div>
                             <div>
-                              <img src="http://127.0.0.1:8087/static/system/images/avatar.jpeg">
+                              <img :src="item.avatar">
                             </div>
                             <div>
                               <span>
-                                装逼王
+                                {{item.username}}
                               </span>
-                              <span>
-                                +100
+                              <span v-if="item.is_consumption === 0">
+                                普通会员
+                              </span>
+                              <span v-if="item.is_consumption === 1">
+                                消费者
                               </span>
                             </div>
                           </div>
                           <div>
                             <div>
                               <span>
-                                18265197620
+                                注册时间
                               </span>
                             </div>
                             <div>
-                              <span>2012-10-9 10:28:10</span>
+                              <span>{{item.create_time}}</span>
                             </div>
                           </div>
                         </div>
@@ -78,11 +81,13 @@
                 isEmpty: false,
                 emptyImage: "search",
                 emptyDescription: "暂无内容",
+                parent_id: 0,
+                num: 0,
             };
         },
         created() {
             let users = this.$storage.get("users",true);
-            console.log(users);
+            this.parent_id = this.$route.query.parent_id;
             this.amount = users.amount;
             this.$http.getUcenter().then((res)=>{
                 if(res.status){
@@ -90,6 +95,14 @@
                     this.$store.commit("UPDATEUSERS",users);
                 }
             });
+        },
+        watch: {
+          '$route' () {
+            this.parent_id = this.$route.query.parent_id;
+            this.page = 1;
+            this.list = [];
+            this.getList();//我的初始化方法
+          }
         },
         methods: {
             changeData(index){
@@ -103,11 +116,17 @@
                 this.$tools.prev();
             },
             onLoad() {
+              this.getList()
+            },
+            getList() {
                 this.isEmpty = false;
-                this.$http.getWalletCashlist({
+                this.$http.getShareList({
                     type: this.isActive,
-                    page: this.page
+                    page: this.page,
+                    parent_id: this.parent_id
                 }).then(result=>{
+                    console.log(result.data)
+                    this.num = result.data.num;
                     if(result.data.list == undefined && this.page == 1){
                         this.isEmpty = true;
                         this.emptyImage = "search";
@@ -131,7 +150,13 @@
                     this.emptyImage = "network";
                     this.emptyDescription = "网络出错，请检查网络是否连接";
                 });
+
             },
+            goParent(id){
+              this.list=[];
+              this.page=1;
+              this.$router.push('/team/teamlist?parent_id='+id)
+            }
         },
     }
 </script>
@@ -190,9 +215,14 @@
                     }
                     span:first-child{
                       font-size: 14px;
+                      width: 100%;
+                      text-align: left;
                     }
                     span:last-child{
                       color: #b91922;
+                      width: 100%;
+                      text-align: left;
+                      margin-top: 6px;
                     }
                   }
                 }
@@ -206,6 +236,8 @@
                   }
                   span{
                     display:table-cell;text-align:center;margin: 0 auto;
+                    line-height: 20px;
+                    height: 20px;
                   }
                 }
             }
