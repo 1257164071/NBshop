@@ -730,3 +730,12 @@ export function getShareList(params) {
         });
     })
 }
+export function getSortList(params) {
+    return new Promise((resolve, reject) => {
+        request.get("/team/sort",params).then((res)=>{
+            resolve(res)
+        }).catch(err=>{
+            reject(err)
+        });
+    })
+}

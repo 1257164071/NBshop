@@ -82,4 +82,52 @@ class Team extends Base
         ]);
     }
 
+    public function sort()
+    {
+        $page = Request::param("page","1","intval");
+        $size = 10;
+        Db::query("set @rowNum=0;");
+
+        $page1 = ($page - 1) * $size;
+        $page2 = $size;
+        if ($page2 > 100){
+            $page2 = 100;
+        }
+
+
+
+        $count = Db::query("select count(*) as total from (select (@rowNum:=@rowNum+1)  as rowNo  FROM users ORDER BY num desc) as c limit 0, 100 ")[0]['total'];
+        $data = Db::query("select * from (select id,avatar,create_time,nickname,(@rowNum:=@rowNum+1)  as rowNo  FROM users ORDER BY num desc) as c limit {$page1}, {$page2}");
+
+        $total = ceil($count/$size);
+        if($total == $page -1){
+            return $this->returnAjax("empty",-1,[
+                "list"=>[],
+                "page"=>$page,
+                "total"=>$total,
+                "size"=>$size,
+                'num' => $count,
+            ]);
+        }
+        $base_url = request()->domain();
+        $data = array_map(function ($rs) use ($base_url){
+            $rs["avatar"] = substr($rs['avatar'],0,1)=='/'?$base_url.$rs['avatar']:$rs['avatar'];
+            $rs["create_time"] = date("Y-m-d H:i:s",$rs["create_time"]);
+            return $rs;
+        },$data);
+
+        return $this->returnAjax("ok",1,[
+            "list"=>$data,
+            "page"=>$page,
+            "total"=>$total,
+            "size"=>$size,
+        ]);
+
+
+
+//        Db::table('user')->field('b')->where(function ($query){
+//            $query->table('user')->order('num asc')->
+//        })->select();
+    }
+
 }

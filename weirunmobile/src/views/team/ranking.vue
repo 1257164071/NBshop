@@ -27,14 +27,14 @@
                         <div class="box">
                           <div>
                             <div>
-                              <img src="http://127.0.0.1:8087/static/system/images/avatar.jpeg">
+                              <img :src="item.avatar">
                             </div>
                             <div>
                               <span style="margin-bottom: 10px">
-                                装逼王
+                                {{item.nickname}}
                               </span>
                               <span>
-                                100名
+                                第{{index+1}}名
                               </span>
                             </div>
                           </div>
@@ -45,7 +45,7 @@
                               </span>
                             </div>
                             <div>
-                              <span>2012-10-9 10:28:10</span>
+                              <span>{{item.create_time}}</span>
                             </div>
                           </div>
                         </div>
@@ -104,7 +104,7 @@
             },
             onLoad() {
                 this.isEmpty = false;
-                this.$http.getWalletCashlist({
+                this.$http.getSortList({
                     type: this.isActive,
                     page: this.page
                 }).then(result=>{
@@ -190,9 +190,14 @@
                     }
                     span:first-child{
                       font-size: 14px;
+                      width: 100%;
+                      text-align: left;
                     }
                     span:last-child{
                       color: #b91922;
+                      width: 100%;
+                      text-align: left;
+                      margin-top: 6px;
                     }
                   }
                 }
@@ -206,6 +211,8 @@
                   }
                   span{
                     display:table-cell;text-align:center;margin: 0 auto;
+                    line-height: 20px;
+                    height: 20px;
                   }
                 }
             }
