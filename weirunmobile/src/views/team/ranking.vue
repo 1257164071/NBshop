@@ -9,7 +9,7 @@
         />
 
         <div class="top">
-            <span>我的排名：10 名</span>
+            <span>我的排名：{{ranking}} 名</span>
         </div>
 
         <div class="list-wrap">
@@ -78,16 +78,16 @@
                 isEmpty: false,
                 emptyImage: "search",
                 emptyDescription: "暂无内容",
+                ranking: 0,
             };
         },
         created() {
             let users = this.$storage.get("users",true);
             console.log(users);
             this.amount = users.amount;
-            this.$http.getUcenter().then((res)=>{
+            this.$http.getMySort().then((res)=>{
                 if(res.status){
-                    this.amount = users.amount = res.data.amount;
-                    this.$store.commit("UPDATEUSERS",users);
+                  this.ranking = res.data.ranking
                 }
             });
         },

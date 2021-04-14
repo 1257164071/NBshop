@@ -739,3 +739,12 @@ export function getSortList(params) {
         });
     })
 }
+export function getMySort(params) {
+    return new Promise((resolve, reject) => {
+        request.get("/team/mysort",params).then((res)=>{
+            resolve(res)
+        }).catch(err=>{
+            reject(err)
+        });
+    })
+}

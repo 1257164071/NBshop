@@ -38,7 +38,6 @@ Route::group(function(){
     Route::get('second/view', 'api/wap.second/view');
     Route::get('special', 'api/wap.special/index');
 
-    Route::get('team/sort', 'api/wap.team/sort');
 
 })->middleware(AllowOrigin::class);
 
@@ -91,6 +90,8 @@ Route::group(function(){
     Route::post('ucenter/avatar', 'api/wap.ucenter/avatar');
     Route::get('team/poster', 'api/wap.team/poster');
     Route::get('team/share', 'api/wap.team/share');
+    Route::get('team/sort', 'api/wap.team/sort');
+    Route::get('team/mysort', 'api/wap.team/mysort');
 
 })->middleware(AllowOrigin::class)->middleware(VerifyToken::class);
 

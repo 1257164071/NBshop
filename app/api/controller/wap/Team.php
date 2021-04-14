@@ -82,6 +82,13 @@ class Team extends Base
         ]);
     }
 
+    public function mysort(){
+        Db::query("set @rowNum=0;");
+        $ranking = Db::query("select  * from (select id,(@rowNum:=@rowNum+1)  as rowNo  FROM users ORDER BY num desc) as c where id=:id",['id'=>Users::get("id")])[0]['rowNo'];
+        return $this->returnAjax("ok",1,[
+            "ranking"=>$ranking,
+        ]);
+    }
     public function sort()
     {
         $page = Request::param("page","1","intval");
