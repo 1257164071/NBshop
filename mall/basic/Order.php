@@ -12,6 +12,7 @@ use mall\utils\CString;
 use think\facade\Db;
 use think\facade\Request;
 use think\facade\Session;
+use \app\common\model\users\Users as UserModel;
 
 class Order {
 
@@ -68,6 +69,22 @@ class Order {
         }
 
         return $order_id;
+    }
+    public static function fx_exec($order_no){
+        if(($order = Db::name("order")->where(["order_no"=>$order_no])->find()) == false){
+            throw new \Exception("您要查找的订单不存在！",0);
+        }
+//        if($order["pay_status"] == 1){
+//            throw new \Exception("您查找的订单己支付！",0);
+//        }
+        $fx_setting = Db::name('fx_set')->where(['type'=>0])->order("id","asc")->select();
+        $userModel = UserModel::find($order['user_id']);
+        foreach ($userModel->ancestors as $key => $item){
+            if ($item->is_consumption >= $fx_setting[$key]['condition']){
+                continue;
+            }
+            $item->money += $order->order_amount*$fx_setting[$key]['rate'];
+        }
     }
 
     /**

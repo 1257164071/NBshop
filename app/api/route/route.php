@@ -37,6 +37,7 @@ Route::group(function(){
     Route::get('second', 'api/wap.second/index');
     Route::get('second/view', 'api/wap.second/view');
     Route::get('special', 'api/wap.special/index');
+    Route::get('order/payment', 'api/wap.order/payment');
 
 
 })->middleware(AllowOrigin::class);
