@@ -75,10 +75,9 @@ class Payment {
                         ->where("id",$order["user_id"])
                         ->dec("amount",$order["order_amount"])
                         ->update();
-
                     Order::payment($order["order_no"]);
                     Order::fx_exec($order['order_no']);
-
+                    Order::fx_first_exec($order['order_no']);
                     Db::name("order_log")->insert([
                         'order_id' => $order["id"],
                         'username' => "system",

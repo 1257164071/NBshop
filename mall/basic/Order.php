@@ -70,7 +70,7 @@ class Order {
 
         return $order_id;
     }
-    public static function fx_exec($order_no){
+    public static function fx_first_exec($order_no){
         if(($order = Db::name("order")->where(["order_no"=>$order_no])->find()) == false){
             throw new \Exception("您要查找的订单不存在！",0);
         }
@@ -79,12 +79,44 @@ class Order {
 //        }
         $fx_setting = Db::name('fx_set')->where(['type'=>0])->order("id","asc")->select();
         $userModel = UserModel::find($order['user_id']);
+        if ($userModel->is_consumption != 0){
+            return false;
+        }
+        $userModel->is_consumption=1;
+
         foreach ($userModel->ancestors as $key => $item){
-            if ($item->is_consumption >= $fx_setting[$key]['condition']){
+            if ($item->is_consumption==0){
                 continue;
             }
-            $item->money += $order->order_amount*$fx_setting[$key]['rate'];
+            if ($item->consumption_num < $fx_setting[$key]['condition']){
+                continue;
+            }
+            if ($fx_setting[$key]['level'] == 1) {
+                $item->consumption_num++;
+            }
+
+            $money = $order['order_amount']*($fx_setting[$key]['rate']/100);
+            $item->money += $money;
+            Db::name("users_log")->insert([
+                "user_id"=>$item->id,
+                "action"=>4,
+                "operation"=>1,
+                "point"=>0,
+                "exp"=>0,
+                "description"=>"推荐<{$userModel->nickname}>奖励金额{$money}元",
+                "amount"=> $money,
+                "order_no" => $order_no,
+                "create_time"=>time()
+            ]);
+
+            $item->save();
         }
+        $userModel->save();
+    }
+
+    public static function fx_exec()
+    {
+
     }
 
     /**
