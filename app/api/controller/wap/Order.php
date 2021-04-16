@@ -171,6 +171,8 @@ class Order extends Base {
             return $this->returnAjax("非法操作",0);
         }
 
+
+
         if(!in_array($source,[1,2])){
             $source = 1;
         }
@@ -199,8 +201,15 @@ class Order extends Base {
             if(empty($rs)){
                 return $this->returnAjax("请选择商品后在提交订单",0);
             }
+            if (Users::get('is_consumption')==0&&count($rs) > 1){
+                return $this->returnAjax("首次购买请选择单款商品！",0);
+            }
 
             foreach($rs as $k=>$v){
+
+                if (Users::get('is_consumption')==0&&$v["goods_nums"] > 1){
+                    return $this->returnAjax("首次购买数量不能大于1！",0);
+                }
                 $cart[$k] = [
                     "activity_id"=>0,
                     "type"=>0,
@@ -214,6 +223,9 @@ class Order extends Base {
         }else{
             if($num <= 0){
                 $num = 1;
+            }
+            if (Users::get('is_consumption')==0&&$num > 1){
+                return $this->returnAjax("首次购买数量不能大于1！",0);
             }
 
             try{
