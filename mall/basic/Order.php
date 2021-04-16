@@ -96,11 +96,11 @@ class Order {
             }
 
             $money = $order['order_amount']*($fx_setting[$key]['rate']/100);
-            $item->money += $money;
+            $item->amount += $money;
             Db::name("users_log")->insert([
                 "user_id"=>$item->id,
                 "action"=>4,
-                "operation"=>1,
+                "operation"=>0,
                 "point"=>0,
                 "exp"=>0,
                 "description"=>"推荐<{$userModel->nickname}>奖励金额{$money}元",
