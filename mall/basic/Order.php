@@ -8,6 +8,8 @@
 // +----------------------------------------------------------------------
 namespace mall\basic;
 
+use app\common\model\system\UsersLog;
+use http\Client\Curl\User;
 use mall\utils\CString;
 use think\facade\Db;
 use think\facade\Request;
@@ -70,6 +72,7 @@ class Order {
 
         return $order_id;
     }
+
     public static function fx_first_exec($order_no){
         if(($order = Db::name("order")->where(["order_no"=>$order_no])->find()) == false){
             throw new \Exception("您要查找的订单不存在！",0);
@@ -83,7 +86,8 @@ class Order {
             return false;
         }
         $userModel->is_consumption=1;
-
+        $users = array();
+        $user_logs = array();
         foreach ($userModel->ancestors as $key => $item){
             if ($item->is_consumption==0){
                 continue;
@@ -98,6 +102,7 @@ class Order {
 
             $money = $order['order_amount']*($fx_setting[$key]['rate']/100);
             $item->amount += $money;
+            $item->shouru += $money;
             Db::name("users_log")->insert([
                 "user_id"=>$item->id,
                 "action"=>4,
@@ -109,9 +114,37 @@ class Order {
                 "order_no" => $order_no,
                 "create_time"=>time(),
                 "pid" => $userModel->id,
+                "type"=>'直推奖励',
             ]);
+            if ($givemoney = $money*0.05 > 0.01){
+                $users = UserModel::where(['parent_id' => $item->id])->where('shouru < 99')->field('id')->find();
+                foreach ($users as $item2){
+                    $users[] = array(
+                        'id' => $item2['id'],
+                        'money' => $givemoney
+                    );
+                    $user_logs[] = array(
+                        "user_id"=>$item2->id,
+                        "action"=>4,
+                        "operation"=>0,
+                        "point"=>0,
+                        "exp"=>0,
+                        "description"=>"平台发放回本奖励{$givemoney}元",
+                        "amount"=> $givemoney,
+                        "order_no" => $order_no,
+                        "create_time"=>time(),
+                        "pid" => $item->id,
+                        "type"=>'回本奖励',
+                    );
+                }
+            }
+
             $item->save();
         }
+
+        $userModel->saveAll($users);
+        $userlog = new UsersLog;
+        $userlog->saveAll($user_logs);
         $userModel->save();
         return true;
     }
@@ -135,6 +168,7 @@ class Order {
             }
             $money = $order['order_amount']*($fx_setting[$key]['rate']/100);
             $item->amount += $money;
+            $item->shouru += $money;
             Db::name("users_log")->insert([
                 "user_id"=>$item->id,
                 "action"=>4,
@@ -146,6 +180,7 @@ class Order {
                 "order_no" => $order_no,
                 "create_time"=>time(),
                 "pid" => $userModel->id,
+                "type"=>'重复消费',
             ]);
             $item->save();
         }

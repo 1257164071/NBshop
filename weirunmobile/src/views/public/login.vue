@@ -9,8 +9,7 @@
         />
         <div class="wrap">
             <div class="top">
-                <div class="title">A3Mall</div>
-<!--                <div class="ctitle">素烟姿</div>-->
+                <div class="title">卫润商城</div>
             </div>
 
             <van-form @submit="onSubmit">
@@ -141,7 +140,7 @@
 <style lang="scss" scoped>
 .top {
     width: 100%;
-    height: 210px;
+    height: 170px;
     background-image: url("../../assets/images/user-login-bg.png");
     .title {
         width: 100%;
@@ -149,7 +148,7 @@
         text-align: center;
         position: relative;
         color: #fff;
-        font-size: 40px;
+        font-size: 30px;
         margin-top: 60px;
     }
     .title:after {

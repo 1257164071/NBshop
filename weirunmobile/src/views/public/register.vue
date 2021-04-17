@@ -8,8 +8,8 @@
             @click-left="prev"
         />
         <div class="wrap">
-            <div class="bg">
-                <img src="../../assets/images/register-banner.png">
+            <div class="top">
+                <div class="title">卫润商城</div>
             </div>
 
             <div class="login">
@@ -144,7 +144,6 @@ export default {
             if(this.loading){
                 return ;
             }
-
             if(this.username == ''){
                 Toast("请填写手机号码");
                 return ;
@@ -204,6 +203,39 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+    .top {
+    width: 100%;
+    height: 170px;
+    background-image: url("../../assets/images/user-login-bg.png");
+    .title {
+        width: 100%;
+        float: left;
+        text-align: center;
+        position: relative;
+        color: #fff;
+        font-size: 30px;
+        margin-top: 60px;
+    }
+    .title:after {
+        position: absolute;
+        width: 115px;
+        height: 3px;
+        background-color: #cf656b;
+        content: " ";
+        left: 50%;
+        transform: translateX(-50%);
+        bottom: -7px;
+    }
+    .ctitle {
+        width: 100%;
+        float: left;
+        text-align: center;
+        font-size: 31px;
+        color: #fff000;
+        margin-top: 10px;
+    }
+}
+
 .wrap{
     width: 100%;
     height: 100vh;
