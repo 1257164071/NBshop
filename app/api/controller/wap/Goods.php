@@ -78,10 +78,10 @@ class Goods extends Base {
 
         $data = [];
         $data["collect"] = false;
-        $usersToken = Db::name("users_token")->where("token",Request::param("token","","trim,strip_tags"))->find();
-        if(!empty($usersToken)){
+        $user_id = Db::name("users_token")->where("token",Request::param("token","","trim,strip_tags"))->value('user_id');
+        if($user_id){
             $data["collect"] = Db::name("users_favorite")->where([
-                "user_id"=>$usersToken["user_id"],
+                "user_id"=>$user_id,
                 "goods_id"=>$id
             ])->count() ? true : false;
         }
@@ -125,7 +125,7 @@ class Goods extends Base {
 
         $item = Db::name("goods_item")->where("goods_id",$id)->select()->toArray();
         $goods_item = [];
-        if (!\app\common\model\users\Users::where(['id' => $usersToken["user_id"]])->value('is_consumption')) {
+        if (!\app\common\model\users\Users::where(['id' => $user_id])->value('is_consumption')) {
             $keyname = 'first_price';
         } else {
             $keyname = 'sell_price';
@@ -148,7 +148,7 @@ class Goods extends Base {
             "id"=>$id,
             "title"=>$goods["title"],
             "photo"=>Tool::thumb($goods["photo"],'medium ',true),
-            "sell_price"=>$goods["sell_price"],
+            "sell_price"=>$goods[$keyname],
             "market_price"=>$goods["market_price"],
             "store_nums"=>$goods["store_nums"],
             "sale"=>$goods["sale"],
