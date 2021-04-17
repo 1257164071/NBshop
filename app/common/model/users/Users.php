@@ -33,6 +33,8 @@ class Users extends A3Mall{
         "last_login"=>"integer",
         "parent_id"=>"integer",
         "is_consumption" => 'integer',
+        "num"   =>  'integer',
+        "consumption_num" => 'integer',
     ];
 
     public function group(){
@@ -48,15 +50,15 @@ class Users extends A3Mall{
         return $this->hasMany(Users::class, 'parent_id');
     }
 
-    public function scopeIsConsumption($query)
-    {
-        $query->where('is_consumption',1);
-    }
-
-    public function scopeNotConsumption($query)
-    {
-        $query->where('is_consumption',0);
-    }
+//    public function scopeIsConsumption($query)
+//    {
+//        $query->where('is_consumption',1);
+//    }
+//
+//    public function scopeNotConsumption($query)
+//    {
+//        $query->where('is_consumption',0);
+//    }
     public function getPathIdsAttr()
     {
         return array_reverse(array_filter(explode('-', trim($this->path, '-'))));
@@ -67,7 +69,7 @@ class Users extends A3Mall{
         return Users::whereIn('id',$this->path_ids)->select();
     }
 
-    public function getConsumptionNumAttr()
+    public function getConsumptionNumberAttr()
     {
         return Users::where(['parent_id' => $this->id, 'is_consumption' => 1])->count();
     }

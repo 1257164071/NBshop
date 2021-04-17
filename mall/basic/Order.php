@@ -88,11 +88,12 @@ class Order {
             if ($item->is_consumption==0){
                 continue;
             }
+
             if ($item->consumption_num < $fx_setting[$key]['condition']){
                 continue;
             }
             if ($fx_setting[$key]['level'] == 1) {
-                $item->consumption_num++;
+                $item->consumption_num = Db::raw('consumption_num+1');
             }
 
             $money = $order['order_amount']*($fx_setting[$key]['rate']/100);
@@ -103,10 +104,11 @@ class Order {
                 "operation"=>0,
                 "point"=>0,
                 "exp"=>0,
-                "description"=>"推荐<{$userModel->nickname}>奖励金额{$money}元",
+                "description"=>"推荐<{$item->nickname}>奖励金额{$money}元",
                 "amount"=> $money,
                 "order_no" => $order_no,
-                "create_time"=>time()
+                "create_time"=>time(),
+                "pid" => $userModel->id,
             ]);
             $item->save();
         }
@@ -139,10 +141,11 @@ class Order {
                 "operation"=>0,
                 "point"=>0,
                 "exp"=>0,
-                "description"=>"用户<{$userModel->nickname}>重复消费 奖励金额{$money}元",
+                "description"=>"用户<{$item->nickname}>重复消费 奖励金额{$money}元",
                 "amount"=> $money,
                 "order_no" => $order_no,
-                "create_time"=>time()
+                "create_time"=>time(),
+                "pid" => $userModel->id,
             ]);
             $item->save();
         }
