@@ -108,7 +108,6 @@ class Order {
                 "order_no" => $order_no,
                 "create_time"=>time()
             ]);
-
             $item->save();
         }
         $userModel->save();
@@ -123,13 +122,31 @@ class Order {
 //        if($order["pay_status"] == 1){
 //            throw new \Exception("您查找的订单己支付！",0);
 //        }
-        $fx_setting = Db::name('fx_set')->where(['type'=>0])->order("id","asc")->select();
+        $fx_setting = Db::name('fx_set')->where(['type'=>1])->order("id","asc")->select();
         $userModel = UserModel::find($order['user_id']);
         if ($userModel->is_consumption == 0){
             return false;
         }
-
-
+        foreach ($userModel->ancestors as $key => $item){
+            if ($item->is_consumption==0){
+                continue;
+            }
+            $money = $order['order_amount']*($fx_setting[$key]['rate']/100);
+            $item->amount += $money;
+            Db::name("users_log")->insert([
+                "user_id"=>$item->id,
+                "action"=>4,
+                "operation"=>0,
+                "point"=>0,
+                "exp"=>0,
+                "description"=>"用户<{$userModel->nickname}>重复消费 奖励金额{$money}元",
+                "amount"=> $money,
+                "order_no" => $order_no,
+                "create_time"=>time()
+            ]);
+            $item->save();
+        }
+        return true;
     }
 
     /**
