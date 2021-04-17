@@ -104,6 +104,7 @@ class Index extends Auth {
         $post['cost_price'] = $data['product_cost_price'];
         $post['goods_weight'] = $data['product_weight'];
         $post['store_nums'] = $data['product_store_nums'];
+        $post['first_price'] = $data['product_first_price'];
         $goods = new \app\common\model\goods\Goods();
         if(($obj=$goods::find($data["id"])) != false){
             try {
@@ -180,7 +181,8 @@ class Index extends Auth {
                 "market_price" => $data['market_price'][$key],
                 "sell_price" => $item,
                 "cost_price" => $data['cost_price'][$key],
-                "goods_weight" => $data['goods_weight'][$key]
+                "goods_weight" => $data['goods_weight'][$key],
+                "first_price" => $data['first_price'][$key]
             ];
 
             $order_no++;

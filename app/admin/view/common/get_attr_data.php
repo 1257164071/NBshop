@@ -29,30 +29,34 @@
             {/volist}
             {/if}
             <th>销售价格</th>
+            <th>首单价格</th>
             <th>市场价格</th>
             <th>成本价格</th>
             <th>重量(克)</th>
             <th>库存</th>
-        </tr> 
+        </tr>
     </thead>
     <tbody>
         <?php if(!empty($data)) : foreach($data as $val) : $spec_key = $spec_data = ""; ?>
         <tr>
             <?php foreach($val as $item) : $param = explode(";;;",$item); ?>
             <td>
-                <?php 
-                $spec_key .= $param[2] . ':' . $param[3].','; 
+                <?php
+                $spec_key .= $param[2] . ':' . $param[3].',';
                 $spec_data .= $param[0] . ':' . $param[1].',';
                 echo $param[1];
                 ?>
             </td>
             <?php endforeach; ?>
             <?php $spec_key = trim($spec_key,','); ?>
-            
+
             <td>
                 <input type="hidden" name="spec_list_key[]" value="<?php echo $spec_key; ?>">
                 <input type="hidden" name="spec_list_data[]" value="<?php echo trim($spec_data,','); ?>">
                 <input type="text" name="sell_price[]" value="<?php echo isset($goods[$spec_key]['sell_price']) ? $goods[$spec_key]['sell_price'] :''; ?>" placeholder="销售价格" autocomplete="off" class="layui-input">
+            </td>
+            <td>
+                <input type="text" name="first_price[]" value="<?php echo isset($goods[$spec_key]['first_price']) ? $goods[$spec_key]['first_price'] : ''; ?>" placeholder="首单价格" autocomplete="off" class="layui-input">
             </td>
             <td>
                 <input type="text" name="market_price[]" value="<?php echo isset($goods[$spec_key]['market_price']) ? $goods[$spec_key]['market_price'] : ''; ?>" placeholder="市场价格" autocomplete="off" class="layui-input">

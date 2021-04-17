@@ -6,7 +6,7 @@
         </ul>
     </div>
 </div>
-   
+
 <section class="content clearfix">
     <div class="layui-editor-box">
         <form action="" class="layui-form layui-form-pane">
@@ -42,7 +42,7 @@
                                 <input type="text" name="title" value="{$data.title|default=''}" lay-reqtext="请填写名称" lay-verify="required" placeholder="请输入名称" autocomplete="off" class="layui-input">
                             </div>
                         </div>
-                        
+
                         <div class="layui-form-item">
                             <label class="layui-form-label">商品属性：</label>
                             <div class="layui-input-block">
@@ -52,7 +52,7 @@
                                 <input type="checkbox" name="goods_extends[]" value="recommend" {if !empty($goods_extends) && in_array('recommend',$goods_extends)}checked{/if} title="推荐" lay-skin="primary">
                             </div>
                         </div>
-                        
+
                         <div class="layui-form-item">
                             <table class="layui-table">
                                 <colgroup>
@@ -64,15 +64,18 @@
                                 </colgroup>
                                 <thead>
                                     <tr>
+                                        <th>首单价格</th>
                                         <th>销售价格</th>
                                         <th>市场价格</th>
                                         <th>成本价格</th>
                                         <th>重量(克)</th>
                                         <th>库存</th>
-                                    </tr> 
+                                    </tr>
                                 </thead>
                                 <tbody>
                                     <tr>
+
+                                      <td><input type="text" name="product_first_price" value="{$data.first_price|default=''}" required  lay-verify="required" placeholder="请输入首单价格" autocomplete="off" class="layui-input"></td>
                                         <td><input type="text" name="product_sell_price" value="{$data.sell_price|default=''}" required  lay-verify="required" placeholder="请输入销售价格" autocomplete="off" class="layui-input"></td>
                                         <td><input type="text" name="product_market_price" value="{$data.market_price|default=''}" required  lay-verify="required" placeholder="请输入市场价格" autocomplete="off" class="layui-input"></td>
                                         <td><input type="text" name="product_cost_price" value="{$data.cost_price|default=''}" required  lay-verify="required" placeholder="请输入成本价格" autocomplete="off" class="layui-input"></td>
@@ -82,7 +85,7 @@
                                 </tbody>
                             </table>
                         </div>
-                        
+
                         <div class="layui-form-item">
                             <table class="layui-table">
                                 <colgroup>
@@ -95,7 +98,7 @@
                                         <th>赠送积分</th>
                                         <th>赠送经验</th>
                                         <th>排序</th>
-                                    </tr> 
+                                    </tr>
                                 </thead>
                                 <tbody>
                                     <tr>
@@ -106,7 +109,7 @@
                                 </tbody>
                             </table>
                         </div>
-                        
+
                         <div class="layui-form-item">
                             <label class="layui-form-label">商品品牌</label>
                             <div class="layui-input-block">
@@ -120,7 +123,7 @@
                                 </select>
                             </div>
                         </div>
-                        
+
                         <div class="layui-form-item">
                             <label class="layui-form-label">配送方式</label>
                             <div class="layui-input-block">
@@ -133,14 +136,14 @@
                                 </select>
                             </div>
                         </div>
-                        
+
                         <div class="layui-form-item layui-form-text">
                                 <label class="layui-form-label">描述</label>
                                 <div class="layui-input-block">
                                     <textarea name="briefly" placeholder="请输入描述" class="layui-textarea">{$data.briefly|default=""}</textarea>
                                 </div>
                             </div>
-                        
+
                         <div class="layui-form-item">
                             <label class="layui-form-label">商品状态：</label>
                             <div class="layui-input-block">
@@ -153,7 +156,7 @@
                     <div class="layui-tab-item">
                         <div class="layui-form-item clearfix">
                             <div class="layui-upload clearfix">
-                                <button type="button" class="layui-btn layui-bg-light-blue" id="uploadfiy-btn"><i class="layui-icon"></i>上传图片</button> 
+                                <button type="button" class="layui-btn layui-bg-light-blue" id="uploadfiy-btn"><i class="layui-icon"></i>上传图片</button>
                                 <blockquote class="layui-elem-quote layui-quote-nm clearfix" style="margin-top: 10px;">
                                     预览图：
                                     <div class="layui-upload-list" id="uploadfiy-list-box">
@@ -179,7 +182,7 @@
                     <div class="layui-tab-item">
                         <div class="layui-form-item clearfix">
                             <div class="layui-upload clearfix">
-                                <button type="button" class="layui-btn layui-bg-light-blue" id="upload-btn"><i class="layui-icon"></i>上传图片</button> 
+                                <button type="button" class="layui-btn layui-bg-light-blue" id="upload-btn"><i class="layui-icon"></i>上传图片</button>
                                 <blockquote class="layui-elem-quote layui-quote-nm clearfix" style="margin-top: 10px;">
                                     预览图：
                                     <div class="layui-upload-list" id="uploadfiy-images-box">
@@ -200,13 +203,13 @@
                                 </blockquote>
                             </div>
                         </div>
-                        
+
                         <div class="layui-form-item">
                             <script id="container" style="width:100%;height: 500px;" name="content" type="text/plain">{$data.content|raw|default=""}</script>
                         </div>
-                        
+
                     </div>
-                    
+
                     <!-- 商品规格 -->
                     <div class="layui-tab-item">
                         <div class="layui-form-item">
@@ -222,7 +225,7 @@
                                     </select>
                                 </div>
                             </div>
-                            
+
                             <div id="spec-table-wrap"></div>
                             <div class="layui-form-item">
                                 <label class="layui-form-label">设置规格：</label>
@@ -234,7 +237,7 @@
                             </div>
                             <div id="spec-data-table-wrap"></div>
                     </div>
-                    
+
                     <!-- 商品属性 -->
                     <div class="layui-tab-item">
                         <div class="layui-form-item">
@@ -250,7 +253,7 @@
                                     </select>
                                 </div>
                             </div>
-                            
+
                             <div class="layui-form-item" id="module-data-wrap"></div>
                     </div>
                 </div>
@@ -279,15 +282,17 @@
         </colgroup>
         <thead>
             <tr>
+                <th>首单价格</th>
                 <th>销售价格</th>
                 <th>市场价格</th>
                 <th>成本价格</th>
                 <th>重量(克)</th>
                 <th>库存</th>
-            </tr> 
+            </tr>
         </thead>
         <tbody>
             <tr>
+                <td><input type="text" name="set_first_price" value="" placeholder="请输入首单价格" autocomplete="off" class="layui-input"></td>
                 <td><input type="text" name="set_sell_price" value="" placeholder="请输入销售价格" autocomplete="off" class="layui-input"></td>
                 <td><input type="text" name="set_market_price" value="" placeholder="请输入市场价格" autocomplete="off" class="layui-input"></td>
                 <td><input type="text" name="set_cost_price" value="" placeholder="请输入成本价格" autocomplete="off" class="layui-input"></td>
@@ -307,7 +312,7 @@
 <script type="text/javascript">
     $(function () {
         var ue = UE.getEditor('container');
-        
+
         function get_module(id){
             if(id != "" && id != undefined){
                 $.get("{:createUrl('common.ajax/get_model')}",{
@@ -338,7 +343,7 @@
                 }
             },"json");
         }
-        
+
         function get_childer_spec_data(flag){
             var arr = [];
             var t = flag || 0;
@@ -363,7 +368,7 @@
                 }
             },"json");
         }
-        
+
         $(document).on("click",".layui-set-btn-spec",function (){
             layer.open({
                 type: 1,
@@ -377,7 +382,7 @@
 
             return false;
         });
-        
+
         $(document).on("click",".layui-btn-spec",function (){
             if($(this).is(".layui-btn-primary")){
                 $(this).removeClass("layui-btn-primary");
@@ -387,7 +392,7 @@
 
             return false;
         });
-        
+
         $("#lay-set-attr-btn").on("click",function (){
             var set_sell_price = $.trim($('[name="set_sell_price"]').val());
             var set_market_price = $.trim($('[name="set_market_price"]').val());
@@ -403,7 +408,7 @@
             layer.closeAll();
             return false;
         });
-        
+
         $("#lay-clear-attr-btn").on("click",function (){
             $('[name="set_sell_price"]').val("");
             $('[name="set_market_price"]').val("");
@@ -412,7 +417,7 @@
             $('[name="set_store_nums"]').val("");
             return false;
         });
-        
+
         $(document).on("click",".layui-clear-btn-spec",function (){
             $('[name="sell_price[]"]').val("");
             $('[name="market_price[]"]').val("");
@@ -421,18 +426,18 @@
             $('[name="store_nums[]"]').val("");
             return false;
         });
-        
+
         $(document).on("click",".layui-submit-btn",function (){
             layer.load(1, {shade: [0.1, '#fff'], time: 0});
             get_childer_spec_data(1);
             return false;
         });
-        
+
         layui.use(["form", "element",'layer','upload'], function () {
             var form = layui.form;
             var layer = layui.layer;
             var upload = layui.upload;
-            
+
            {if !empty($data.id)}
                 {if !empty($data.attr_id)}
                 get_childer_spec('{$data.attr_id|default=""}');
@@ -442,7 +447,7 @@
                 get_module('{$data.model_id|default=""}');
                 {/if}
            {/if}
-           
+
             layui.form.on('select(attr-select)',function (data){
                 var id = $.trim(data.value);
                 if(id <= 0){
@@ -456,13 +461,13 @@
 
                 return false;
             });
-            
+
             layui.form.on('select(module-select)',function (data){
                 var id = $.trim(data.value);
                 get_module(id);
                 return false;
             });
-            
+
             //多图片上传
             upload.render({
               elem: '#uploadfiy-btn'
@@ -494,7 +499,7 @@
                  }
               }
             });
-            
+
             upload.render({
               elem: '#upload-btn'
               ,url: '{:createUrl("common.uploadfiy/image")}'
@@ -525,28 +530,28 @@
                  }
               }
             });
-            
+
             $(document).on("click",".n6-insert",function (){
                var pt = $(this).parent().parent();
                UE.getEditor('container').setContent('<p><img src="'+pt.find("img").attr("src")+'"></p>', true);
                return false;
            });
-           
+
            $(document).on("click",".n6-thumb",function (){
                if($(this).is(".active")){
                    $(this).removeClass("active");
                    $('[name="photo"]').val("");
                    return false;
                }
-               
+
                $(".n6-thumb").removeClass("active");
                $(this).addClass("active");
                var pt = $(this).parent().parent();
                $('[name="photo"]').val(pt.find("img").attr("src"));
-               
+
                 return false;
            });
-            
+
            $(document).on("click",".n6-delete",function (){
                var pt = $(this).parent().parent();
                $.post('{:createUrl("common.uploadfiy/delete")}',{
@@ -560,7 +565,7 @@
                },"json");
                return false;
            });
-            
+
             form.on('submit(layui-submit-filter)', function (data) {
                 var index = layer.load(1, { shade: [0.2,'#fff'] });
                 $.post('{:createUrl("editor")}', data.field, function (result) {

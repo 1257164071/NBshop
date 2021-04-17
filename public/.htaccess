@@ -6,4 +6,5 @@
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteCond $1 !^(static|uploads)
   RewriteRule ^(.*)$ index.php/$1 [QSA,PT,L]
+  SetEnvIf Authorization ^(.*) HTTP_AUTHORIZATION=$1
 </IfModule>

@@ -10,7 +10,9 @@ namespace app\api\controller\wap;
 
 use app\common\model\custom\Pages;
 use dh2y\qrcode\QRcode;
+use http\Client\Curl\User;
 use mall\basic\Setting;
+use mall\basic\Users;
 use mall\response\Response;
 use mall\utils\Tool;
 use think\facade\Db;
@@ -159,11 +161,19 @@ class Index extends Base {
                 "size"=>$size
             ]);
         }
+        $usersToken = Db::name("users_token")->where("token",Request::header('Auth-Token'))->find();
 
-        $result = Db::name("goods")
-            ->field("id,title,photo,sell_price as price,sale")
-            ->where('status',0)
-            ->order('id','desc')->limit((($page - 1) * $size),$size)->select()->toArray();
+        if (!\app\common\model\users\Users::where(['id' => $usersToken["user_id"]])->value('is_consumption')){
+            $result = Db::name("goods")
+                ->field("id,title,photo,first_price as price,sale")
+                ->where('status',0)
+                ->order('id','desc')->limit((($page - 1) * $size),$size)->select()->toArray();
+        }else{
+            $result = Db::name("goods")
+                ->field("id,title,photo,sell_price as price,sale")
+                ->where('status',0)
+                ->order('id','desc')->limit((($page - 1) * $size),$size)->select()->toArray();
+        }
 
         $data = array_map(function ($rs){
             $rs["photo"] = Tool::thumb($rs["photo"],"medium",true);

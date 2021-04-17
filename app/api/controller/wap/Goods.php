@@ -125,10 +125,15 @@ class Goods extends Base {
 
         $item = Db::name("goods_item")->where("goods_id",$id)->select()->toArray();
         $goods_item = [];
+        if (!\app\common\model\users\Users::where(['id' => $usersToken["user_id"]])->value('is_consumption')) {
+            $keyname = 'first_price';
+        } else {
+            $keyname = 'sell_price';
+        }
         foreach($item as $key=>$val){
             $sku_id = str_replace([",",":"],["_","_"], $val["spec_key"]);
             $goods_item[$sku_id]["key"] = $val["spec_key"];
-            $goods_item[$sku_id]["sell_price"] = $val["sell_price"];
+            $goods_item[$sku_id]["sell_price"] = $val[$keyname];
             $goods_item[$sku_id]["goods_weight"] = $val["goods_weight"];
             $goods_item[$sku_id]["store_nums"] = $val["store_nums"];
             $goods_item[$sku_id]["goods_no"] = $val["goods_number"];
