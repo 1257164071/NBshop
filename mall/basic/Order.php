@@ -86,14 +86,15 @@ class Order {
             return false;
         }
         $userModel->is_consumption=1;
-        $users = array();
+        $users_all = array();
         $user_logs = array();
+        $level = 0;
         foreach ($userModel->ancestors as $key => $item){
-            if ($item->is_consumption==0){
+            if ($item->is_consumption==0||$level>=7){
                 continue;
             }
 
-            if ($item->consumption_num < $fx_setting[$key]['condition']){
+            if ($item->consumption_num < $fx_setting[$level++]['condition']){
                 continue;
             }
             if ($fx_setting[$key]['level'] == 1) {
@@ -116,15 +117,17 @@ class Order {
                 "pid" => $userModel->id,
                 "type"=>'直推奖励',
             ]);
-            if ($givemoney = $money*0.05 > 0.01){
-                $users = UserModel::where(['parent_id' => $item->id])->where('shouru < 99')->field('id')->find();
+            $givemoney = round($money*0.05,2);
+            if ($givemoney> 0.01){
+                $users = UserModel::where(['parent_id' => $item->id])->where('shouru < 99')->select();
                 foreach ($users as $item2){
-                    $users[] = array(
+                    $users_all[] = array(
                         'id' => $item2['id'],
-                        'money' => $givemoney
+                        'amount' => Db::raw("amount+".$givemoney),
+                        'shouru' => Db::raw("shouru+".$givemoney)
                     );
                     $user_logs[] = array(
-                        "user_id"=>$item2->id,
+                        "user_id"=>$item2['id'],
                         "action"=>4,
                         "operation"=>0,
                         "point"=>0,
@@ -141,10 +144,8 @@ class Order {
 
             $item->save();
         }
-
-        $userModel->saveAll($users);
-        $userlog = new UsersLog;
-        $userlog->saveAll($user_logs);
+        $userModel->saveAll($users_all);
+        Db::name('users_log')->insertAll($user_logs);
         $userModel->save();
         return true;
     }
@@ -162,13 +163,18 @@ class Order {
         if ($userModel->is_consumption == 0){
             return false;
         }
+        $users_all = array();
+        $user_logs = array();
+        $level = 0;
         foreach ($userModel->ancestors as $key => $item){
-            if ($item->is_consumption==0){
+            if ($item->is_consumption==0||$level >= 5){
                 continue;
             }
-            $money = $order['order_amount']*($fx_setting[$key]['rate']/100);
+            $money = $order['order_amount']*($fx_setting[$level++]['rate']/100);
             $item->amount += $money;
+
             $item->shouru += $money;
+
             Db::name("users_log")->insert([
                 "user_id"=>$item->id,
                 "action"=>4,
@@ -182,8 +188,36 @@ class Order {
                 "pid" => $userModel->id,
                 "type"=>'重复消费',
             ]);
+            $givemoney = round($money*0.05,2);
+            if ($givemoney>0.01){
+                $users = UserModel::where(['parent_id' => $item->id])->where('shouru < 99')->select();
+                foreach ($users as $item2){
+                    $users_all[] = array(
+                        'id' => $item2['id'],
+                        'amount' => Db::raw("amount+".$givemoney),
+                        'shouru' => Db::raw("shouru+".$givemoney)
+                    );
+                    $user_logs[] = array(
+                        "user_id"=>$item2['id'],
+                        "action"=>4,
+                        "operation"=>0,
+                        "point"=>0,
+                        "exp"=>0,
+                        "description"=>"平台发放回本奖励{$givemoney}元",
+                        "amount"=> $givemoney,
+                        "order_no" => $order_no,
+                        "create_time"=>time(),
+                        "pid" => $item->id,
+                        "type"=>'回本奖励',
+                    );
+                }
+            }
+
             $item->save();
         }
+        $userModel->saveAll($users_all);
+
+        Db::name('users_log')->insertAll($user_logs);
         return true;
     }
 

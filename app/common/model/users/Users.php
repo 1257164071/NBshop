@@ -35,6 +35,7 @@ class Users extends A3Mall{
         "is_consumption" => 'integer',
         "num"   =>  'integer',
         "consumption_num" => 'integer',
+        "shouru" => 'integer'
     ];
 
     public function group(){
