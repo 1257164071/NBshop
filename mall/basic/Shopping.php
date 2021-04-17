@@ -11,6 +11,7 @@ namespace mall\basic;
 use mall\utils\BC;
 use mall\utils\Tool;
 use think\facade\Db;
+use think\facade\Request;
 
 class Shopping {
 
@@ -56,6 +57,12 @@ class Shopping {
             if(empty($products) && $val["nums"] > $goods["store_nums"]){
                 throw new \Exception("您选择的商品库存不足",0);
             }
+            $user_id = Db::name("users_token")->where("token",Request::header('Auth-Token'))->value('user_id');
+            if (\app\common\model\users\Users::where(['id' => $user_id])->value('is_consumption')){
+                $key_name = 'sell_price';
+            } else {
+                $key_name = 'first_price';
+            }
 
             $data['item'][$key] = [
                 "goods_id"=>$goods["id"],
@@ -66,8 +73,8 @@ class Shopping {
                 "goods_nums"=>$val["nums"],
                 "goods_weight"=>$goods["goods_weight"],
                 "market_price"=>$goods["market_price"],
-                "real_price"=>$goods["sell_price"],
-                "sell_price"=>$goods["sell_price"],
+                "real_price"=>$goods[$key_name],
+                "sell_price"=>$goods[$key_name],
                 "goods_array"=>""
                 //"cost_price"=>$goods["cost_price"]
             ];
@@ -78,19 +85,19 @@ class Shopping {
             if(!empty($products)){
                 $data['item'][$key]["goods_weight"] = $products["goods_weight"];
                 $data['item'][$key]["market_price"] = $products["market_price"];
-                $data['item'][$key]["real_price"] = $products["sell_price"];
-                $data['item'][$key]["sell_price"] = $products["sell_price"];
+                $data['item'][$key]["real_price"] = $products[$key_name];
+                $data['item'][$key]["sell_price"] = $products[$key_name];
                 //$data['item'][$key]["cost_price"] = $products["cost_price"];
                 $data['item'][$key]["product_id"] = $products["id"];
                 $data['item'][$key]["spec_key"] = $products["spec_key"];
                 $data['item'][$key]["goods_array"] = Attribute::get($goods["id"],$products["spec_key"]);
                 $data["goods_weight"] = BC::add($products["goods_weight"] * $val["nums"],$data["goods_weight"]);
-                $data["real_amount"] = BC::add($products["sell_price"] * $val["nums"],$data["real_amount"]);
-                $data["payable_amount"] = BC::add($products["sell_price"] * $val["nums"],$data["payable_amount"]);
+                $data["real_amount"] = BC::add($products[$key_name] * $val["nums"],$data["real_amount"]);
+                $data["payable_amount"] = BC::add($products[$key_name] * $val["nums"],$data["payable_amount"]);
             }else{
                 $data["goods_weight"] = BC::add($goods["goods_weight"] * $val["nums"],$data["goods_weight"]);
-                $data["real_amount"] = BC::add($goods["sell_price"] * $val["nums"],$data["real_amount"]);
-                $data["payable_amount"] = BC::add($goods["sell_price"] * $val["nums"],$data["payable_amount"]);
+                $data["real_amount"] = BC::add($goods[$key_name] * $val["nums"],$data["real_amount"]);
+                $data["payable_amount"] = BC::add($goods[$key_name] * $val["nums"],$data["payable_amount"]);
             }
 
             $data["activity_id"] = $val["activity_id"];

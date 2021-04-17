@@ -161,9 +161,9 @@ class Index extends Base {
                 "size"=>$size
             ]);
         }
-        $usersToken = Db::name("users_token")->where("token",Request::header('Auth-Token'))->find();
+        $user_id = Db::name("users_token")->where("token",Request::header('Auth-Token'))->value('user_id');
 
-        if (!\app\common\model\users\Users::where(['id' => $usersToken["user_id"]])->value('is_consumption')){
+        if (!\app\common\model\users\Users::where(['id' => $user_id])->value('is_consumption')){
             $result = Db::name("goods")
                 ->field("id,title,photo,first_price as price,sale")
                 ->where('status',0)
