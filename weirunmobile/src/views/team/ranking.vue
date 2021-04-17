@@ -1,7 +1,7 @@
 <template>
     <div>
         <nav-bar
-            title="推广排名"
+            title="分享排名"
             left-arrow
             :fixed="true"
             :placeholder="true"

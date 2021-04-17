@@ -22,7 +22,7 @@
                     <div class="list-item clear" v-for="(item, index) in list" :key="index">
                         <div class="t">
 <!--                            <span>{{item.action}}</span>-->
-                            <span>推广佣金</span>
+                            <span>分享佣金</span>
                             <span>{{item.action}}</span>
                         </div>
                         <div class="box clear">

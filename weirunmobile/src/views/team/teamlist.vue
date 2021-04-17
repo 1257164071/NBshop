@@ -1,7 +1,7 @@
 <template>
     <div>
         <nav-bar
-            title="推广统计"
+            title="分享统计"
             left-arrow
             :fixed="true"
             :placeholder="true"
@@ -9,7 +9,7 @@
         />
 
         <div class="top">
-            <span>总推广人数：{{num}} 人</span>
+            <span>总分享人数：{{num}} 人</span>
         </div>
 
         <div class="list-wrap">

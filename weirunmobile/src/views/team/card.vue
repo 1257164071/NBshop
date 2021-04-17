@@ -1,7 +1,7 @@
 <template>
   <div>
     <nav-bar
-        title="推广名片"
+        title="分享名片"
         left-arrow
         :fixed="true"
         :placeholder="true"

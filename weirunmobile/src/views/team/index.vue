@@ -8,7 +8,7 @@
                 @click-left="prev"
         />
         <div class="header">
-            <div class="title">我的推广</div>
+            <div class="title">我的分享</div>
             <div class="info">
                 <div>当前佣金</div>
                 <div>100</div>
@@ -28,11 +28,11 @@
         <div class="guide">
             <div @click="$router.push('/team/card')">
                 <span><img src="../../assets/images/wallet/7.png"></span>
-                <span>推广名片</span>
+                <span>分享名片</span>
             </div>
             <div @click="$router.push('/team/teamlist')">
                 <span><img src="../../assets/images/wallet/8.png"></span>
-                <span>推广人员</span>
+                <span>分享人员</span>
             </div>
             <div @click="$router.push('/team/moneydetail')">
                 <span><img src="../../assets/images/wallet/9.png"></span>
@@ -40,7 +40,7 @@
             </div>
             <div @click="$router.push('/team/ranking')">
                 <span><img src="../../assets/images/wallet/10.png"></span>
-                <span>推广排名</span>
+                <span>分享排名</span>
             </div>
             <div @click="$router.push('/ucenter/bill/cashlist')">
                 <span><img src="../../assets/images/wallet/10.png"></span>
