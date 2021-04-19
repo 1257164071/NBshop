@@ -93,6 +93,7 @@ Route::group(function(){
     Route::get('team/share', 'api/wap.team/share');
     Route::get('team/sort', 'api/wap.team/sort');
     Route::get('team/mysort', 'api/wap.team/mysort');
+    Route::get('team/teammain', 'api/wap.team/teammain');
 
 })->middleware(AllowOrigin::class)->middleware(VerifyToken::class);
 

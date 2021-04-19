@@ -8,6 +8,7 @@
 // | Author: xzncit <158373108@qq.com>
 // +----------------------------------------------------------------------
 namespace app\api\controller\wap;
+use app\common\model\users\Log;
 use dh2y\qrcode\QRcode;
 use mall\basic\Users;
 use mall\utils\Tool;
@@ -135,6 +136,22 @@ class Team extends Base
 //        Db::table('user')->field('b')->where(function ($query){
 //            $query->table('user')->order('num asc')->
 //        })->select();
+    }
+
+    public function teammain()
+    {
+        $user = Users::get('id');
+        $user = \app\common\model\users\Users::find($user);
+        $arr= [];
+        $arr[0] = Log::where(['user_id' => $user->id,'action' => 4])->sum('id');
+        $arr[1] = Log::where(['user_id' => $user->id, 'action' => 4])->whereDay('create_time')->sum('id');
+        $arr[2] = $user->amount;
+        return $this->returnAjax("ok",1,[
+            0  =>  $arr[0],
+            1  =>  $arr[1],
+            2  =>  $arr[2],
+        ]);
+
     }
 
 }

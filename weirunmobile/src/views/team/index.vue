@@ -10,12 +10,12 @@
         <div class="header">
             <div class="title">我的分享</div>
             <div class="info">
-                <div>当前佣金</div>
-                <div>100</div>
+                <div>可提现佣金</div>
+                <div>{{info[2]}}</div>
                 <div>
-                    <span>今日收益(元)：<span>99</span></span>
+                    <span>今日收益(元)：<span>{{info[1]}}</span></span>
                     <span>|</span>
-                    <span>累计收益(元)：<span>999</span></span>
+                    <span>累计收益(元)：<span>{{info[0]}}</span></span>
                 </div>
                 <div style="display: none">
                   <a @click="$router.push('/ucenter/bill/cashlist')">提现记录</a>
@@ -63,9 +63,16 @@
         },
         data() {
             return {
+                info:{},
             };
         },
         created() {
+            this.$http.getTeamMain().then((res)=>{
+                if(res.status){
+                    console.log(res);
+                    this.info = res.data
+                }
+            });
         },
         methods: {
             prev(){

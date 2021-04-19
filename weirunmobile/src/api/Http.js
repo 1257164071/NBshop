@@ -748,3 +748,13 @@ export function getMySort(params) {
         });
     })
 }
+
+export function getTeamMain() {
+    return new Promise((resolve, reject) => {
+        request.get("/team/teammain").then((res)=>{
+            resolve(res)
+        }).catch(err=>{
+            reject(err)
+        });
+    });
+}
