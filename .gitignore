@@ -1,6 +1,6 @@
 /.idea
 /.vscode
+.env
 /public/uploads
 *.log
 .DS_Store
-.env
