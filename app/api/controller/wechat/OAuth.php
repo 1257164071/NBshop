@@ -46,7 +46,7 @@ class OAuth extends Base {
         }
 
         $user = WeChat::Oauth()->getUserInfo($token['access_token'],$token['openid']);
-
+        log_write($user);
         $condition = [];
         if(isset($user["unionid"])){
             $condition["unionid"] = $user["unionid"];
