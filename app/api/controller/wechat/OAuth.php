@@ -65,6 +65,7 @@ class OAuth extends Base {
                     "mobile"=>"",
                     "password"=>$password,
                     "status"=>0,
+                    "avatar" => $user['headimgurl'],
                     "create_ip"=>Request::ip(),
                     "last_ip"=>Request::ip(),
                     "create_time"=>time(),

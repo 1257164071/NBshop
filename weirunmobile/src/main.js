@@ -19,6 +19,17 @@ Vue.prototype.$http = http;
 Vue.prototype.$storage = Storage;
 Vue.prototype.$cookie = Cookie;
 Vue.prototype.$wx = wx;
+
+function getQueryString(name) {
+    var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+    var r = window.location.search.substr(1).match(reg);
+    if (r != null) return unescape(r[2]); return null;
+}
+let parent_id =  getQueryString('parent_id');
+
+if (parent_id !== null){
+  this.$cookie.set("parent_id",parent_id)
+}
 users.init();
 
 new Vue({

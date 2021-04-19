@@ -23,10 +23,16 @@
         },
         created() {
             if(this.$tools.isWeiXin()){
-
+                let parent_id = this.$cookies.get('parent_id');
+                if (parent_id === null){
+                    alert('抱歉无推荐人无法访问');
+                    this.$router.push('/');
+                    return
+                }
                 let params = {
                     code: this.$route.query.code,
-                    state: this.$route.query.state
+                    state: this.$route.query.state,
+                    parent_id: parent_id,
                 };
 
                 this.$http.sendOauth(params).then(result=>{
