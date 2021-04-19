@@ -9,7 +9,7 @@
         />
         <div class="wrap">
             <div class="top">
-                <div class="title">卫润商城</div>
+                <div class="title">新零售商城</div>
             </div>
 
             <van-form @submit="onSubmit">

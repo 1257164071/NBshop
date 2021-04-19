@@ -24,7 +24,7 @@ module.exports = {
     },
     chainWebpack: config => {
         config.plugin('html').tap(args => {
-            args[0].title= 'A3Mall';
+            args[0].title= '新零售商城';
             return args;
         });
     }

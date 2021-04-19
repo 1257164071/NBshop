@@ -346,7 +346,7 @@ router.beforeEach(function(to,from,next){
         return ;
     }
 
-    document.title = to.meta.title || process.env.VUE_APP_WEB_NAME || "A3Mall B2C商城";
+    document.title = to.meta.title || process.env.VUE_APP_WEB_NAME || "新零售商城 B2C商城";
     store.commit("UPDATETABBAR",to.meta.tabbar);
     next();
 });

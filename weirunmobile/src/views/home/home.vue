@@ -4,7 +4,7 @@
             <div class="top-wrap">
                 <div class="header">
                     <div class="logo">
-                        <span>卫润商城</span>
+                        <span>新零售商城</span>
 <!--                        <span>素烟姿</span>-->
                     </div>
                     <div class="cart" @click="$router.push('/cart/index')"></div>
