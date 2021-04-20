@@ -7,6 +7,8 @@ import router from "../router";
 
 export function login(obj,from) {
     let users = Storage.get("users",true);
+    console.log(from);
+
     if(tools.isWeiXin() && users == null){
         if(tools.in_array(obj.name,["Oauth"])){
             return false;
@@ -21,19 +23,24 @@ export function login(obj,from) {
         }
 
         Storage.set("VUE_REFERER",obj.path);
-        // if(tools.isWeiXin()){
-        //     oAuth();
-        // }else{
-        //     router.push('/public/login');
-        // }
+        if(tools.isWeiXin()){
+            oAuth();
+        }else{
+            router.push('/public/login');
+        }
         router.push('/public/login');
 
         return true;
-    }else if(users != null && users.token){
-        if(tools.in_array(obj.name,["Login","Register","Forget","Oauth"])){
-            router.push('/');
+    }else if(users != null && users.token && users.is_register == 1) {
+        if (tools.in_array(obj.name, ["Login", "Register", "Forget", "Oauth"])) {
+            // router.push('/');
             return true;
         }
+    // }
+    }else if(users != null && users.token && obj.path != '/public/register' && users.is_register == 0) {
+        console.log(from);
+        router.push('/public/register');
+        return true;
     }
 
     return false;

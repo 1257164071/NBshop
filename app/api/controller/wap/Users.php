@@ -72,7 +72,8 @@ class Users extends Base {
             "point"=>$info["point"],
             "amount"=>$info["amount"],
             "last_ip"=>$info["last_ip"],
-            "last_login"=>$info["last_login"]
+            "last_login"=>$info["last_login"],
+            "is_register"   => $info['is_register'],
         ]);
     }
 
@@ -97,46 +98,54 @@ class Users extends Base {
         }
 
         $parent = UserModel::where(['id' => input('parent_id')])->find();
+        $user_id = Db::name("users_token")->where("token",input('token'))->value('user_id');
+        $user = UserModel::where(['id'=>$user_id])->find();
 
-        if ($parent == null){
+        if ($parent == null&&$user == null){
             return $this->returnAjax("没有介绍人 无法注册！",0);
         }
 
-//
-//        $sms = Db::name("users_sms")
-//            ->where("mobile",$username)
-//            ->where("code",$code)
-//            ->order("id","DESC")->find();
-//        if(empty($sms)){
-//            return $this->returnAjax("您填写的验证码错误",0);
-//        }
-//
-//        $setting = new Setting();
-//        $config = $setting->getConfigData("sms");
-//        if(($sms["create_time"] + (60 * $config["duration_time"])) < time()){
-//            return $this->returnAjax("您的验证码己过期，请重新发送。",0);
-//        }
+
+        $sms = Db::name("users_sms")
+            ->where("mobile",$username)
+            ->where("code",$code)
+            ->order("id","DESC")->find();
+        if(empty($sms)){
+            return $this->returnAjax("您填写的验证码错误",0);
+        }
+        $setting = new Setting();
+        $config = $setting->getConfigData("sms");
+        if(($sms["create_time"] + (60 * $config["duration_time"])) < time()){
+            return $this->returnAjax("您的验证码己过期，请重新发送。",0);
+        }
 
         if(Db::name("users")->where("mobile",$username)->count()){
             return $this->returnAjax("您填写的手机号码己存在！",0);
         }
 
         $group_id = Db::name("users_group")->order('minexp','ASC')->value("id");
-
-        $data = [
-            "group_id"=>$group_id,
-            "username"=>$username,
-            "mobile"=>$username,
-            "password"=>md5($password),
-            "status"=>0,
-            "create_ip"=>Request::ip(),
-            "last_ip"=>Request::ip(),
-            "create_time"=>time(),
-            "last_login"=>time(),
-            'parent_id' => input('parent_id')
-        ];
-        $user = new UserModel;
-        $user->save($data);
+        if ($user == null){
+            $data = [
+                "group_id"=>$group_id,
+                "username"=>$username,
+                "mobile"=>$username,
+                "password"=>md5($password),
+                "status"=>0,
+                "create_ip"=>Request::ip(),
+                "last_ip"=>Request::ip(),
+                "create_time"=>time(),
+                "last_login"=>time(),
+                'parent_id' => input('parent_id'),
+                'is_register'   =>  1,
+            ];
+            $user = new UserModel;
+            $user->save($data);
+        } else {
+            $user->mobile = $username;
+            $user->is_register = 1;
+            $user->password = md5($password);
+            $user->save();
+        }
 
         $user_id = $user->id;
         $token = Token::set($user_id);
@@ -157,7 +166,8 @@ class Users extends Base {
             "point"=>$info["point"],
             "amount"=>$info["amount"],
             "last_ip"=>$info["last_ip"],
-            "last_login"=>$info["last_login"]
+            "last_login"=>$info["last_login"],
+            "is_register"   => $info['is_register'],
         ]);
     }
 

@@ -48,7 +48,6 @@ class OAuth extends Base {
         }
 
         $user = WeChat::Oauth()->getUserInfo($token['access_token'],$token['openid']);
-        log_write($user);
         $condition = [];
         if(isset($user["unionid"])){
             $condition["unionid"] = $user["unionid"];
@@ -101,6 +100,7 @@ class OAuth extends Base {
                 "last_ip"=>$info["last_ip"],
                 "last_login"=>$info["last_login"],
                 "avatar" => $user['headimgurl'],
+                "is_register"   => $info['is_register'],
             ]);
         }else{
             $group_id = Db::name("users_group")->order('minexp','ASC')->value("id");

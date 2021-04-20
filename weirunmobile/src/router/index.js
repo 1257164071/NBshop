@@ -3,6 +3,7 @@ import VueRouter from 'vue-router';
 import Home from "../views/home/home";
 import store from "../store";
 import { login } from "../libs/Users"
+import Storage from "../utils/Storage";
 
 Vue.use(VueRouter);
 const routes = [
@@ -345,7 +346,6 @@ router.beforeEach(function(to,from,next){
     if(login(to,from)){
         return ;
     }
-
     document.title = to.meta.title || process.env.VUE_APP_WEB_NAME || "新零售商城 B2C商城";
     store.commit("UPDATETABBAR",to.meta.tabbar);
     next();

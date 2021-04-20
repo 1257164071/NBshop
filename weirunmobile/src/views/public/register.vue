@@ -157,8 +157,9 @@ export default {
                 Toast("请填写验证码！");
                 return ;
             }
+            let users = this.$storage.get("users",true);
 
-            if(this.$route.query.parent_id === undefined){
+            if(users==null&&this.$route.query.parent_id === undefined){
                 Toast("没有介绍人 无法注册");
                 return ;
             }
@@ -166,7 +167,8 @@ export default {
                 username: this.username,
                 password: this.password,
                 code: this.code,
-                parent_id: this.$route.query.parent_id
+                parent_id: this.$route.query.parent_id,
+                token: users.token,
             }
 
             let spread_id = parseInt(this.$cookie.get("spread_id"));
