@@ -23,8 +23,8 @@ class Team extends Base
         $user = \app\common\model\users\Users::find($user);
 
 
-//        if ($user['poster'] == null){
-        if (true){
+        if ($user['poster'] == null){
+//        if (true){
             $code = new QRcode();
             $code_path =  $code->png(request()->domain().'/public/register?parent_id='.$user->id,false,2.8)        //生成二维码
                 ->background(110,298,'static/images/bg2.jpg')
