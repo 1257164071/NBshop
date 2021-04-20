@@ -4,3 +4,5 @@
 /public/uploads
 *.log
 .DS_Store
+/public/static/wap
+/vendor

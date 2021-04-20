@@ -120,7 +120,6 @@ class Finance extends Auth {
 
             $usersWithdrawLog = new UsersWithdrawLog();
             $list = $usersWithdrawLog->get_list($condition,$limit);
-
             if(empty($list['data'])){
                 return Response::returnArray("当前还没有数据哦！",1);
             }
@@ -130,6 +129,7 @@ class Finance extends Auth {
                 $list['data'][$key]["status_name"] = $this->status[$item["status"]];
                 // 提现方式
                 $str = '';
+
                 if($item["type"] == 1){
                     $str .= "<p>卡号：" . $item["code"] . '</p>';
                     $str .= "<p>开户地址：" . $item["address"] . '</p>';
@@ -138,8 +138,8 @@ class Finance extends Auth {
                     $str .= "<p>用户名：" . $item["username"] . '</p>';
                     $str .= "<p>支付宝：" . $item["account"] . '</p>';
                 }else if($item["type"] == 3){
-                    $str .= "<p>用户名：" . $item["username"] . '</p>';
-                    $str .= "<p>微信：" . $item["account"] . '</p>';
+                    $str .= "<p>用户名：" . $item['users']["nickname"] . '</p>';
+                    $str .= "<p>手机号：" . $item['users']["mobile"] . '</p>';
                 }
 
                 $list['data'][$key]['string'] = $str;
@@ -166,6 +166,7 @@ class Finance extends Auth {
 
         }
         $str = '&nbsp;&nbsp;';
+        $row = array_merge($row,Db::name('users')->where(['id' => $row['user_id']])->find());
         if($row["type"] == 1){
             $str .= "<span>卡号：" . $row["code"] . '</span>&nbsp;&nbsp;';
             $str .= "<span>开户地址：" . $row["address"] . '</span>&nbsp;&nbsp;';
@@ -191,34 +192,40 @@ class Finance extends Auth {
             $data = Request::post();
 
             $u = Db::name("users")->where(["id"=>$row["user_id"]])->find();
-            if($u["amount"] < $row["price"]){
-                return Response::returnArray("操作失败，余额不足！",0);
-            }
+//            if($u["amount"] < $row["price"]){
+//                return Response::returnArray("操作失败，余额不足！",0);
+//            }
             Db::startTrans();
             try {
-                $redpack = new Redpack;
-                $openid = Db::name('wechat_users')->where(['user_id'=>$user['id']])->value('openid');
-                $order_no = date('Ymd') . str_pad(mt_rand(1, 99999), 5, '0', STR_PAD_LEFT);
-                $request = [
-                    "nonce_str" => date('Ymd') . str_pad(mt_rand(1, 99999), 5, '0', STR_PAD_LEFT),
-                    're_openid' => $openid,
-                    'wishing'   => "感谢您在本商城进行的消费,祝您天天开心",
-                    "mch_billno" => $order_no,
-                    "send_name" =>  "新零售商城",
-                    "total_amount"  => 100,
-                    "act_name"  =>  '商城购物红包活动',
-                    "total_num" => 1,
-                    "client_ip" =>  Request::ip(),
-                    "remark"    =>  '发放时间'.date('Y-m-d H:i:s'),
-                    "scene_id"  =>  'PRODUCT_1',
-                ];
-                $result = $redpack->create($request);
-                if ($result["return_code"] == "SUCCESS"){
-                    $data['status'] = 1;
-                } else {
-                    $data['status'] = 2;
-                }
+                $status = 0;
+                $order_no = 0;
+                $log = Db::name("users_withdraw_log")->where(["id"=>$id])->find();
 
+                if (input('status') == 1&&$log['type'] == 3){
+                    $redpack = new Redpack;
+                    $openid = Db::name('wechat_users')->where(['user_id'=>$user['id']])->value('openid');
+                    $order_no = date('Ymd') . str_pad(mt_rand(1, 99999), 5, '0', STR_PAD_LEFT);
+                    $request = [
+                        "nonce_str" => date('Ymd') . str_pad(mt_rand(1, 99999), 5, '0', STR_PAD_LEFT),
+                        're_openid' => $openid,
+                        'wishing'   => "感谢您在本商城进行的消费,祝您天天开心",
+                        "mch_billno" => $order_no,
+                        "send_name" =>  "新零售商城",
+                        "total_amount"  => $row["price"],
+                        "act_name"  =>  '商城购物红包活动',
+                        "total_num" => 1,
+                        "client_ip" =>  Request::ip(),
+                        "remark"    =>  '发放时间'.date('Y-m-d H:i:s'),
+                        "scene_id"  =>  'PRODUCT_1',
+                    ];
+                    $result = $redpack->create($request);
+                    if ($result["return_code"] == "SUCCESS"){
+                        $status = 1;
+                    } else {
+                        $status = 2;
+                        throw new \Exception("微信红包打款失败！",0);
+                    }
+                }
                 Db::name("users_withdraw_log")->where(["id"=>$id])->update([
                     "msg"=>$data["msg"],
                     "status"=>$data["status"],
@@ -226,16 +233,17 @@ class Finance extends Auth {
                     "update_time"=>time()
                 ]);
 
-                if($data["status"] == 1){
+                if($data["status"] == 3){
                     Db::name("users")
                         ->where(["id"=>$row["user_id"]])
-                        ->dec("amount",$row["price"])->update();
+                        ->inc("amount",$row["price"])->update();
                 }
 
                 Db::commit();
+
             }catch (\Exception $e){
                 Db::rollback();
-                return Response::returnArray("操作失败，请稍后在试！",0);
+                return Response::returnArray("微信打款失败请手动联系该用户！",0);
             }
 
             return Response::returnArray("操作成功！");

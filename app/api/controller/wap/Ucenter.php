@@ -577,13 +577,13 @@ class Ucenter extends Base {
             return $this->returnAjax("您还有提现申请未处理。",0);
         }
 
-        if(empty($data["name"])){
-            return $this->returnAjax("请填写持卡人。",0);
-        }
-
-        if(empty($data["code"])){
-            return $this->returnAjax("请填写卡号。",0);
-        }
+//        if(empty($data["name"])){
+//            return $this->returnAjax("请填写持卡人。",0);
+//        }
+//
+//        if(empty($data["code"])){
+//            return $this->returnAjax("请填写卡号。",0);
+//        }
 
         if(empty($data["price"])){
             return $this->returnAjax("请填写金额。",0);
@@ -596,19 +596,36 @@ class Ucenter extends Base {
         if(Users::get("amount") < $data["price"]){
             return $this->returnAjax("提现失败，您的余额不足",0);
         }
-
+        Db::name('users')->where(['id' => Users::get("id")])->dec('amount',$data["price"])->update();
+        Db::name('users_log')->insert(array(
+            "user_id"=>Users::get("id"),
+            "action"=>4,
+            "operation"=>1,
+            "point"=>0,
+            "exp"=>0,
+            "description"=>"提款扣费",
+            "amount"=> $data['price'],
+            "order_no" => 0,
+            "create_time"=>time(),
+            "pid" => 0,
+            "type"=>'提款扣费',
+        ));
+        if (input('bank_type') == '微信红包') {
+             $type = 3;
+        }else{
+             $type = 1;
+        }
         Db::name("users_withdraw_log")->insert([
             "user_id"=>Users::get("id"),
             "withdraw_type"=>1,
             "bank_name"=>$data["bank_type"],
             "bank_real_name"=>$data["name"],
-            "type"=>1,
+            "type"=>$type,
             "code"=>$data["code"],
             "price"=>$data["price"],
             "status"=>0,
             "create_time"=>time()
         ]);
-
         return $this->returnAjax("申请提现成功，请等待管理员审核");
     }
 

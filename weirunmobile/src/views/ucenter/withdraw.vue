@@ -8,14 +8,14 @@
             @click-left="prev"
         />
         <van-notice-bar color="#1989fa" background="#ecf9ff" left-icon="info-o">
-            当前可提现金额: {{money}}
+            当前可提现金额: {{money}} | 微信红包须小于400
         </van-notice-bar>
         <van-field
             readonly
             clickable
             label="转帐方式"
             :value="bank_type"
-            placeholder="选择银行"
+            placeholder="选择转账方式"
             @click="showPicker = true"
         />
         <van-popup v-model="showPicker" round position="bottom">
@@ -26,10 +26,9 @@
                 @confirm="onConfirm"
             />
         </van-popup>
-
-        <van-field v-model="name" label="持卡人" />
-        <van-field v-model="code" label="卡号" />
-        <van-field v-model="price" type="number" label="提现金额" />
+        <van-field v-model="price" type="number" label="提现金额" placeholder="最少提现1元" />
+        <van-field v-model="name" label="持卡人" v-show="typeshow" />
+        <van-field v-model="code" label="卡号"  v-show="typeshow"/>
 
         <div class="btn">
             <van-button type="danger" @click="doSubmit" block round>提交</van-button>
@@ -54,16 +53,17 @@
                 bank_type: '',
                 name: '',
                 code: '',
-                price: '',
+                price: 0,
                 money: '0.00',
                 showPicker: false,
-                columns: ['请选择'],
+                columns: ['微信红包'],
+                typeshow: false,
             };
         },
         created() {
             this.$http.getWalletSettlement().then(res=>{
                 if(res.status){
-                    this.columns = res.data.bank;
+                    this.columns = ['微信红包'].concat(res.data.bank);
                     this.money = res.data.money;
                 }
             });
@@ -75,30 +75,39 @@
             onConfirm(value) {
                 this.bank_type = value;
                 this.showPicker = false;
+                if (value !== '微信红包') {
+                    this.typeshow = true;
+                } else {
+                    this.typeshow = false
+                }
             },
             doSubmit(){
                 if(this.bank_type.length == 0){
-                    Toast("请选择银行");
+                    Toast("请选择收款方式");
                     return false;
                 }
 
-                if(this.name.length == 0){
+                if(this.name.length == 0&&this.bank_type!=='微信红包'){
                     Toast("请填写持卡人");
                     return false;
                 }
 
-                if(this.code.length == 0){
+                if(this.code.length == 0&&this.bank_type!=='微信红包'){
                     Toast("请填写卡号");
                     return false;
                 }
 
-                if(!/^([1-9]{1})(\d{15}|\d{18})$/.test(this.code)){
+                if(!/^([1-9]{1})(\d{15}|\d{18})$/.test(this.code)&&this.bank_type!=='微信红包'){
                     Toast("您填写的银行卡号不正确");
                     return false;
                 }
 
-                if(this.price <= 0){
-                    Toast("请填写提现金额");
+                if(this.price < 1){
+                    Toast("最少提款1元");
+                    return false;
+                }
+                if(this.price > 400&&this.bank_type ==='微信红包'){
+                    Toast("微信红包最多提款400元, 请选择其他方式或分批提款");
                     return false;
                 }
 
@@ -126,7 +135,10 @@
 
 <style lang="scss" scoped>
     .btn{
-        padding: 0 10px;
-        margin-top: 20px;
+        position: fixed;
+        bottom:0;
+        width: 80%;
+        margin-left: 10%;
+        margin-bottom: 15px;
     }
 </style>
