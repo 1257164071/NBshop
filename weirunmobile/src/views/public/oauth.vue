@@ -23,7 +23,7 @@
         },
         created() {
             if(this.$tools.isWeiXin()){
-                let parent_id = this.$cookies.get('parent_id');
+                let parent_id = this.$storage.get('parent_id');
                 if (parent_id === null){
                 }
                 let params = {

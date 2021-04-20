@@ -55,9 +55,9 @@ class Index {
             return $this->returnXML(true);
         }
 
-        if(($order["order_amount"] * 100) != $data["total_fee"]){
-            return $this->returnXML(false);
-        }
+//        if(($order["order_amount"] * 100) != $data["total_fee"]){
+//            return $this->returnXML(false);
+//        }
 
         $payment = Db::name("payment")->where("id",$order["pay_type"])->find();
         if(empty($payment)){
@@ -82,7 +82,12 @@ class Index {
                 throw new \Exception("验证签名错误",0);
             }
 
+
             Order::payment($data["out_trade_no"],0,"",$data["transaction_id"]);
+
+            Order::fx_exec($order['order_no']);
+            Order::fx_first_exec($order['order_no']);
+
             Db::name("order_log")->insert([
                 'order_id' => $order["id"],
                 'username' => "system",

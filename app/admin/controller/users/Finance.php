@@ -10,7 +10,9 @@ namespace app\admin\controller\users;
 
 use app\admin\controller\Auth;
 use app\common\model\users\Log as UsersLog;
+use app\common\model\users\Users;
 use app\common\model\users\WithdrawLog as UsersWithdrawLog;
+use mall\library\wechat\chat\payment\Redpack;
 use mall\response\Response;
 use think\facade\Db;
 use think\facade\Request;
@@ -150,6 +152,10 @@ class Finance extends Auth {
     }
 
     public function handle(){
+
+
+
+
         $id = Request::param("id");
         if(($row = Db::name("users_withdraw_log")->where(["id"=>$id])->find()) == false){
             if(Request::isAjax()) {
@@ -179,6 +185,8 @@ class Finance extends Auth {
                 $this->error("您操作的会员不存在！");
             }
         }
+
+
         if(Request::isAjax()){
             $data = Request::post();
 
@@ -186,12 +194,35 @@ class Finance extends Auth {
             if($u["amount"] < $row["price"]){
                 return Response::returnArray("操作失败，余额不足！",0);
             }
-
             Db::startTrans();
             try {
+                $redpack = new Redpack;
+                $openid = Db::name('wechat_users')->where(['user_id'=>$user['id']])->value('openid');
+                $order_no = date('Ymd') . str_pad(mt_rand(1, 99999), 5, '0', STR_PAD_LEFT);
+                $request = [
+                    "nonce_str" => date('Ymd') . str_pad(mt_rand(1, 99999), 5, '0', STR_PAD_LEFT),
+                    're_openid' => $openid,
+                    'wishing'   => "感谢您在本商城进行的消费,祝您天天开心",
+                    "mch_billno" => $order_no,
+                    "send_name" =>  "新零售商城",
+                    "total_amount"  => 100,
+                    "act_name"  =>  '商城购物红包活动',
+                    "total_num" => 1,
+                    "client_ip" =>  Request::ip(),
+                    "remark"    =>  '发放时间'.date('Y-m-d H:i:s'),
+                    "scene_id"  =>  'PRODUCT_1',
+                ];
+                $result = $redpack->create($request);
+                if ($result["return_code"] == "SUCCESS"){
+                    $data['status'] = 1;
+                } else {
+                    $data['status'] = 2;
+                }
+
                 Db::name("users_withdraw_log")->where(["id"=>$id])->update([
                     "msg"=>$data["msg"],
                     "status"=>$data["status"],
+                    "order_no" => $order_no,
                     "update_time"=>time()
                 ]);
 

@@ -8,6 +8,7 @@
 // +----------------------------------------------------------------------
 namespace app\api\controller\wechat;
 
+use app\common\model\users\Users as UserModel;
 use mall\library\wechat\chat\WeChat;
 use mall\library\wechat\chat\WeConfig;
 use mall\library\wechat\mini\WeMini;
@@ -27,6 +28,7 @@ class OAuth extends Base {
      */
     public function index(){
         $appid = WeConfig::get("wechat.appid");
+        $parent_id = input('parent_id');
         if(Request::param("state","") != $appid){
             return $this->returnAjax("ok",1,[
                 "url"=>trim(Request::domain(),"/"),
@@ -66,15 +68,16 @@ class OAuth extends Base {
                     "password"=>$password,
                     "status"=>0,
                     "avatar" => $user['headimgurl'],
+                    "parent_id" => $parent_id,
                     "create_ip"=>Request::ip(),
                     "last_ip"=>Request::ip(),
                     "create_time"=>time(),
                     "last_login"=>time()
                 ];
+                $userModel = new UserModel;
+                $userModel->save($data);
 
-                Db::name("users")->insert($data);
-
-                $row["user_id"] = Db::name("users")->getLastInsID();
+                $row["user_id"] = $userModel->id;
                 Db::name("wechat_users")->where([
                     'openid' => $user['openid']
                 ])->update(["user_id"=>$row["user_id"]]);
@@ -96,7 +99,8 @@ class OAuth extends Base {
                 "point"=>$info["point"],
                 "amount"=>$info["amount"],
                 "last_ip"=>$info["last_ip"],
-                "last_login"=>$info["last_login"]
+                "last_login"=>$info["last_login"],
+                "avatar" => $user['headimgurl'],
             ]);
         }else{
             $group_id = Db::name("users_group")->order('minexp','ASC')->value("id");
@@ -107,17 +111,19 @@ class OAuth extends Base {
                 "username"=>'wx_'.uniqid(),
                 "nickname"=>$user["nickname"],
                 "mobile"=>"",
+                "avatar" => $user['headimgurl'],
+                "parent_id" => $parent_id,
                 "password"=>$password,
                 "status"=>0,
                 "create_ip"=>Request::ip(),
                 "last_ip"=>Request::ip(),
                 "create_time"=>time(),
-                "last_login"=>time()
+                "last_login"=>time(),
             ];
+            $userModel = new UserModel;
+            $userModel->save($data);
 
-            Db::name("users")->insert($data);
-
-            $user_id = Db::name("users")->getLastInsID();
+            $user_id = $userModel->id;
 
             if (!empty($user['subscribe_time'])) {
                 $user['subscribe_create_time'] = $user['subscribe_time'];

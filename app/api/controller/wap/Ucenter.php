@@ -233,6 +233,8 @@ class Ucenter extends Base {
     }
 
     public function info(){
+        $base_url = request()->domain();
+
         $info = Users::info(Users::get("id"));
         return $this->returnAjax("ok",1,[
             "username"=>$info["username"],
@@ -240,7 +242,7 @@ class Ucenter extends Base {
             "mobile"=>$info["mobile"],
             "coupon_count"=>$info["coupon_count"],
             "amount"=>$info["amount"],
-            "avatar"=>Users::avatar($info["avatar"]),
+            "avatar"=>substr($info['avatar'],0,1)=='/'?$base_url.$info['avatar']:$info['avatar'],
             "order_count"=>[
                 "a"=>Db::name("order")->where(["status"=>1,"pay_status"=>0,"user_id"=>Users::get("id")])->count(),
                 "b"=>Db::name("order")->where(["status"=>2,"pay_status"=>1,"user_id"=>Users::get("id")])->where('distribution_status','=','0')->count(),

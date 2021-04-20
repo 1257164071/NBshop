@@ -27,10 +27,10 @@ function getQueryString(name) {
 }
 let parent_id =  getQueryString('parent_id');
 
-if (parent_id !== null){
-  this.$cookie.set("parent_id",parent_id)
-}
 users.init();
+if (parent_id !== null){
+  Storage.set("parent_id",parent_id)
+}
 
 new Vue({
   router,

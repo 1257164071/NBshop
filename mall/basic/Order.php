@@ -101,7 +101,7 @@ class Order {
                 $item->consumption_num = Db::raw('consumption_num+1');
             }
 
-            $money = $order['order_amount']*($fx_setting[$key]['rate']/100);
+            $money = round($order['order_amount']*($fx_setting[$key]['rate']/100),2);
             $item->amount += $money;
             $item->shouru += $money;
             Db::name("users_log")->insert([
@@ -170,7 +170,7 @@ class Order {
             if ($item->is_consumption==0||$level >= 5){
                 continue;
             }
-            $money = $order['order_amount']*($fx_setting[$level++]['rate']/100);
+            $money = round($order['order_amount']*($fx_setting[$level++]['rate']/100),2);
             $item->amount += $money;
 
             $item->shouru += $money;
@@ -212,7 +212,6 @@ class Order {
                     );
                 }
             }
-
             $item->save();
         }
         $userModel->saveAll($users_all);
