@@ -65,7 +65,7 @@
             />
 
             <div class="refund-btn" v-if="!order.is_refund">
-                <van-button type="danger" @click="onSubmit" :loading="btn" loading-text="提交中..." round block>申请退款</van-button>
+                <van-button type="danger" @click="onSubmit" :loading="btn" loading-text="提交中..." round block  v-show="false">申请退款</van-button>
             </div>
         </div>
 

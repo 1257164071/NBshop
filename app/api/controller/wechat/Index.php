@@ -85,8 +85,8 @@ class Index {
 
             Order::payment($data["out_trade_no"],0,"",$data["transaction_id"]);
 
-            Order::fx_exec($order['order_no']);
-            Order::fx_first_exec($order['order_no']);
+//            Order::fx_exec($order['order_no']);
+//            Order::fx_first_exec($order['order_no']);
 
             Db::name("order_log")->insert([
                 'order_id' => $order["id"],

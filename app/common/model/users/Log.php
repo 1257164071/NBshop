@@ -24,12 +24,12 @@ class Log extends A3Mall{
         "amount"=>"float",
         "point"=>"integer",
         "exp"=>"integer",
-        "create_time"=>"integer"
+        "create_time"=>"timestamp"
     ];
 
     public function users(){
         return $this->hasOne(Users::class,"id","user_id")
-            ->bind(["username"])
+            ->bind(["username",'nickname','mobile'])
             ->joinType("LEFT");
     }
 

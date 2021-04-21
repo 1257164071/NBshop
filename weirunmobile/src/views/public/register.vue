@@ -24,18 +24,18 @@
                                 placeholder="请输入手机号码"
                                 class="the-form-field"
                             />
-                            <van-field
-                                v-model="code"
-                                center
-                                clearable
-                                left-icon="envelop-o"
-                                placeholder="请输入短信验证码"
-                                class="the-form-field"
-                            >
-                                <template #button>
-                                    <van-button class="send-sms-btn" @click.stop.prevent="sendSms" size="small" color="#b91922" type="primary">{{ smsText }}</van-button>
-                                </template>
-                            </van-field>
+<!--                            <van-field-->
+<!--                                v-model="code"-->
+<!--                                center-->
+<!--                                clearable-->
+<!--                                left-icon="envelop-o"-->
+<!--                                placeholder="请输入短信验证码"-->
+<!--                                class="the-form-field"-->
+<!--                            >-->
+<!--                                <template #button>-->
+<!--                                    <van-button class="send-sms-btn" @click.stop.prevent="sendSms" size="small" color="#b91922" type="primary">{{ smsText }}</van-button>-->
+<!--                                </template>-->
+<!--                            </van-field>-->
                             <van-field
                                 v-model="password"
                                 type="password"
@@ -150,13 +150,14 @@ export default {
             }else if(!/^1[3-9]\d{9}$/.test(this.username)){
                 Toast("您填写的手机号码不正确！");
                 return ;
-            }else if(this.password == ''){
+            }else if(this.password == '') {
                 Toast("请填写密码！");
-                return ;
-            }else if(this.code == ''){
-                Toast("请填写验证码！");
-                return ;
+                return;
             }
+            // }else if(this.code == ''){
+            //     Toast("请填写验证码！");
+            //     return ;
+            // }
             let users = this.$storage.get("users",true);
 
             if(users==null&&this.$route.query.parent_id === undefined){
@@ -197,7 +198,7 @@ export default {
                 this.loading = false;
             }).catch((error)=>{
                 this.loading = false;
-                Toast("连接网络错误，请检查网络是否连接！");
+                Toast("抱歉, 没有介绍人,无法注册！");
             });
         }
     },

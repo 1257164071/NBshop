@@ -29,7 +29,7 @@ class Users extends A3Mall{
         "spread_count"=>"integer",
         "amount"=>"float",
         "spread_amount"=>"float",
-        "create_time"=>"integer",
+        "create_time"=>"timestamp",
         "last_login"=>"integer",
         "parent_id"=>"integer",
         "is_consumption" => 'integer',

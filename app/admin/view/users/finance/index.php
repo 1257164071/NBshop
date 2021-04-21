@@ -33,6 +33,8 @@ layui.use(['table','form'], function () {
         , cols: [[
                   {type: 'checkbox'}
                 , {field: 'username', title: '会员名称',width:150}
+                , {field: 'nickname', title: '会员昵称',width:150}
+                , {field: 'mobile', title: '手机号',width:150}
                 , {field: 'description', title: '信息'}
                 , {field: 'amount', title: '金额',width:150,align:'center'}
                 , {field: 'create_time', title: '创建时间',width:180,align:'center'}
@@ -50,7 +52,7 @@ layui.use(['table','form'], function () {
                 break;
         }
     });
-    
+
 });
 </script>
 

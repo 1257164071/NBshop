@@ -166,17 +166,22 @@ class Finance extends Auth {
 
         }
         $str = '&nbsp;&nbsp;';
-        $row = array_merge($row,Db::name('users')->where(['id' => $row['user_id']])->find());
+        $item2 = Db::name('users')->where(['id' => $row['user_id']])->find();
+        $row['nickname'] = $item2['nickname'];
+        $row['mobile'] = $item2['mobile'];
+        $row['username'] = $item2['username'];
+
         if($row["type"] == 1){
             $str .= "<span>卡号：" . $row["code"] . '</span>&nbsp;&nbsp;';
             $str .= "<span>开户地址：" . $row["address"] . '</span>&nbsp;&nbsp;';
             $str .= "<span>银行：" . $row["bank_name"] . '</span>&nbsp;&nbsp;';
         }else if($row["type"] == 2){
-            $str .= "<span>用户名：" . $row["username"] . '</span>&nbsp;&nbsp;';
-            $str .= "<span>支付宝：" . $row["account"] . '</span>&nbsp;&nbsp;';
+            $str .= "<span>用户名：" . $row["nickname"] . '</span>&nbsp;&nbsp;';
+            $str .= "<span>支付宝：" . $row["username"] . '</span>&nbsp;&nbsp;';
         }else if($row["type"] == 3){
-            $str .= "<span>用户名：" . $row["username"] . '</span>&nbsp;&nbsp;';
-            $str .= "<span>微信：" . $row["account"] . '</span>&nbsp;&nbsp;';
+            $str .= "<span>用户名：" . $row["nickname"] . '</span>&nbsp;&nbsp;';
+            $str .= "<span>微信：" . $row["username"] . '</span>&nbsp;&nbsp;';
+            $str .= "<span>手机号：" . $row["mobile"] . '</span>&nbsp;&nbsp;';
         }
         $row["string"] = $str;
         if(($user = Db::name("users")->where(["id"=>$row["user_id"]])->find()) == false){
@@ -200,10 +205,11 @@ class Finance extends Auth {
                 $status = 0;
                 $order_no = 0;
                 $log = Db::name("users_withdraw_log")->where(["id"=>$id])->find();
-
                 if (input('status') == 1&&$log['type'] == 3){
                     $redpack = new Redpack;
                     $openid = Db::name('wechat_users')->where(['user_id'=>$user['id']])->value('openid');
+
+
                     $order_no = date('Ymd') . str_pad(mt_rand(1, 99999), 5, '0', STR_PAD_LEFT);
                     $request = [
                         "nonce_str" => date('Ymd') . str_pad(mt_rand(1, 99999), 5, '0', STR_PAD_LEFT),
@@ -211,7 +217,7 @@ class Finance extends Auth {
                         'wishing'   => "感谢您在本商城进行的消费,祝您天天开心",
                         "mch_billno" => $order_no,
                         "send_name" =>  "新零售商城",
-                        "total_amount"  => $row["price"],
+                        "total_amount"  => bcmul($row["price"],100),
                         "act_name"  =>  '商城购物红包活动',
                         "total_num" => 1,
                         "client_ip" =>  Request::ip(),
@@ -219,9 +225,11 @@ class Finance extends Auth {
                         "scene_id"  =>  'PRODUCT_1',
                     ];
                     $result = $redpack->create($request);
-                    if ($result["return_code"] == "SUCCESS"){
+                    if ($result["result_code"] == "SUCCESS"){
                         $status = 1;
                     } else {
+                        dump($row['price']);
+                        dump($result);die;
                         $status = 2;
                         throw new \Exception("微信红包打款失败！",0);
                     }

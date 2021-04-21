@@ -1,6 +1,6 @@
 <template>
     <div>
-        <van-nav-bar
+        <van-nav-bar  v-show="false"
                 title="确认收货"
                 left-arrow
                 :fixed="true"
@@ -53,7 +53,7 @@
             </div>
 
             <div class="btn">
-                <van-button type="danger" @click="onSubmit" :loading="btn" loading-text="提交中..." round block>确认收货</van-button>
+                <van-button type="danger" @click="onSubmit"  v-show="false" :loading="btn" loading-text="提交中..." round block >确认收货</van-button>
             </div>
         </div>
 

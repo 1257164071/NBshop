@@ -82,7 +82,7 @@ class Order {
 //        }
         $fx_setting = Db::name('fx_set')->where(['type'=>0])->order("id","asc")->select();
         $userModel = UserModel::find($order['user_id']);
-        if ($userModel->is_consumption != 0){
+        if ($order['fx_type'] != 1){
             return false;
         }
         $userModel->is_consumption=1;
@@ -147,6 +147,7 @@ class Order {
         $userModel->saveAll($users_all);
         Db::name('users_log')->insertAll($user_logs);
         $userModel->save();
+        Db::name("order")->where(["order_no"=>$order_no])->update(['fx_flag'=>1]);
         return true;
     }
 
@@ -160,7 +161,7 @@ class Order {
 //        }
         $fx_setting = Db::name('fx_set')->where(['type'=>1])->order("id","asc")->select();
         $userModel = UserModel::find($order['user_id']);
-        if ($userModel->is_consumption == 0){
+        if ($order['fx_type'] != 2){
             return false;
         }
         $users_all = array();
@@ -217,6 +218,7 @@ class Order {
         $userModel->saveAll($users_all);
 
         Db::name('users_log')->insertAll($user_logs);
+        Db::name("order")->where(["order_no"=>$order_no])->update(['fx_flag'=>1]);
         return true;
     }
 
@@ -231,14 +233,19 @@ class Order {
         if($order["pay_status"] == 1){
             throw new \Exception("您查找的订单己支付！",0);
         }
-
+        $userModel = UserModel::find($order['user_id']);
+        $type = 1;
+        if ($userModel->is_consumption != 0){
+            $type = 2;
+        }
+        $userModel->is_consumption=1;
         if(Db::name("order")->where(["order_no"=>$order_no])->update([
                 "status" => ($order['status'] == 5) ? 5 : 2,
                 "pay_time" => time(),
                 "pay_status" => 1,
                 "note" => $note,
                 "trade_no"=>$trade_no,
-                "admin_id"=>$admin_id
+                "admin_id"=>$admin_id,
             ]) == false){
             throw new \Exception("操作订单失败，请重试！",0);
         }
@@ -253,7 +260,7 @@ class Order {
             'pay_status' => 1,
             'is_delete' => 0,
             'note' => $note,
-            'admin_id' => $admin_id ? $admin_id : 0
+            'admin_id' => $admin_id ? $admin_id : 0,
         ]);
 
         //非货到付款的支付方式
@@ -267,10 +274,12 @@ class Order {
                     "goods_nums"=>$val["goods_nums"]
                 ], "-");
                 Db::name("goods")->where('id',$val["goods_id"])->update([
-                    "sale"=>Db::raw("sale+1")
+                    "sale"=>Db::raw("sale+1"),
                 ]);
             }
         }
+        Db::name("order")->where(["order_no"=>$order_no])->update(['fx_type'=>$type]);
+        $userModel->save();
 
         return true;
     }

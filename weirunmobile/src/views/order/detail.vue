@@ -92,8 +92,8 @@
                     <span class="cancel" v-if="order.order_status==1" @click="cancel">取消订单</span>
                     <span class="pay" v-if="order.order_status==1" @click="popupShow=true">立即付款</span>
 
-                    <span class="confirm" v-if="order.order_status == 2 || order.order_status==3 || order.order_status==4" @click="confirm">确认收货</span>
-                    <span class="refund" v-if="order.order_status == 2 || order.order_status==3 || order.order_status==4" @click="refund">申请退款</span>
+                    <span class="confirm" v-if="order.order_status == 2 || order.order_status==3 || order.order_status==4" @click="confirm" v-show="false" >确认收货</span>
+                    <span class="refund" v-if="order.order_status == 2 || order.order_status==3 || order.order_status==4" @click="refund" v-show="false">申请退款</span>
 
                     <span class="evaluate" v-if="order.order_status==5" @click="evaluate">待评价</span>
                 </div>

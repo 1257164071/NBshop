@@ -24,10 +24,6 @@
         created() {
             if(this.$tools.isWeiXin()){
                 let parent_id = this.$storage.get('parent_id');
-                if (parent_id === null){
-                    alert('无推荐人, 无法注册');
-                    return;
-                }
                 let params = {
                     code: this.$route.query.code,
                     state: this.$route.query.state,

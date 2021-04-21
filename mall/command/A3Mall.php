@@ -9,6 +9,7 @@
 
 namespace mall\command;
 
+use mall\basic\Order;
 use mall\basic\Setting;
 use think\console\Command;
 use think\console\Input;
@@ -46,6 +47,14 @@ class A3Mall extends Command {
                 Db::name("order")->where(["pay_status"=>1,"status"=>2])->where("pay_time","<=",(time() - ($time * 60 * 60 * 24)))->update([
                     "completion_time"=>time(),"status"=>5
                 ]);
+                break;
+            case "fenxiao":
+                $time = $input->hasOption('time') ? $input->getOption('time') : $setting["complete_time"];
+                $count = Db::name("order")->where(["pay_status"=>1,"fx_flag"=>0])->where("pay_time","<=",(time() - ($time * 60 * 60 * 24)))->count();
+                Db::name("order")->where(["pay_status"=>1,"fx_flag"=>0])->where("pay_time","<=",(time() - ($time * 60 * 60 * 24)))->select()->each(function ($order){
+                    Order::fx_exec($order['order_no']);
+                    Order::fx_first_exec($order['order_no']);
+                });
                 break;
             case "sign":
                 $time = $input->hasOption('time') ? $input->getOption('time') : $setting["confirm_time"];

@@ -104,6 +104,22 @@
                 , {field: 'distribution_status_name', title: '发货状态',width:100,align:'center'}
                 , {field: 'payment_name', title: '支付方式',width:100,align:'center'}
                 , {field: 'order_amount', title: '订单金额',width:120,align:'center'}
+                , {field: 'fx_type', title: '分销类型',width:120,align:'center',templet:function (res) {
+                if (res.fx_type == 1){
+                    return '首次购买'
+                }else if (res.fx_type == 2) {
+                  return '重复消费'
+                }else {
+                  return '未知状态'
+                }
+              }}
+                , {field: 'fx_flag', title: '发放状态',width:120,align:'center',templet:function (res) {
+                  if(res.fx_flag == 1){
+                    return '佣金已发放'
+                  }else {
+                    return '佣金未发放'
+                  }
+                }}
                 , {field: 'create_time', title: '下单时间',width:180,align:'center'}
                 , {fixed: 'right', align: 'center', title: '操作', width: 210,templet: function(res){
                         var str = '';

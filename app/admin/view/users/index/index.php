@@ -81,6 +81,8 @@
                 {type: 'checkbox'}
                 , {field: 'group_name', title: '所属分组',width:120}
                 , {field: 'username', title: '用户名'}
+                , {field: 'nickname', title: '昵称'}
+                , {field: 'mobile', title: '手机号'}
                 , {field: 'tags', title: '标签',width:120}
                 , {field: 'point', title: '积分',width:100,align:"center"}
                 , {field: 'amount', title: '余额',width:120,align:"center"}

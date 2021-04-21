@@ -155,7 +155,8 @@ class OAuth extends Base {
                 "point"=>$info["point"],
                 "amount"=>$info["amount"],
                 "last_ip"=>$info["last_ip"],
-                "last_login"=>$info["last_login"]
+                "last_login"=>$info["last_login"],
+                "is_register"   =>  $info['is_register'],
             ]);
         }
     }
@@ -200,7 +201,8 @@ class OAuth extends Base {
                     "create_ip"=>Request::ip(),
                     "last_ip"=>Request::ip(),
                     "create_time"=>time(),
-                    "last_login"=>time()
+                    "last_login"=>time(),
+                    "is_register"   =>  0,
                 ];
 
                 Db::name("users")->insert($data);
@@ -227,7 +229,8 @@ class OAuth extends Base {
                 "point"=>$info["point"],
                 "amount"=>$info["amount"],
                 "last_ip"=>$info["last_ip"],
-                "last_login"=>$info["last_login"]
+                "last_login"=>$info["last_login"],
+                "is_register"   =>  $info['is_register'],
             ]);
         }else{
             $group_id = Db::name("users_group")->order('minexp','ASC')->value("id");
@@ -290,7 +293,8 @@ class OAuth extends Base {
                 "point"=>$info["point"],
                 "amount"=>$info["amount"],
                 "last_ip"=>$info["last_ip"],
-                "last_login"=>$info["last_login"]
+                "last_login"=>$info["last_login"],
+                "is_register"   =>  $info['is_register'],
             ]);
         }
     }

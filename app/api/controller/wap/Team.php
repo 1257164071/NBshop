@@ -23,14 +23,32 @@ class Team extends Base
         $user = \app\common\model\users\Users::find($user);
 
 
-        if ($user['poster'] == null){
-//        if (true){
+//        if ($user['poster'] == null){
+        if (true){
             $code = new QRcode();
-            $code_path =  $code->png(request()->domain().'/public/register?parent_id='.$user->id,false,2.8)        //生成二维码
-                ->background(110,298,'static/images/bg2.jpg')
-                ->text($user->nickname,30,[100,253], '#ea0606')
-                ->text('微信扫描二维码或长按识别',30,['center',1100],'#fffffff')
+            $code_path =  $code->png(request()->domain().'/public/register?parent_id='.$user->id,false,2.5)        //生成二维码
+                ->background(515,880,'static/images/bg2.jpg')
+                ->text($user->nickname,30,[100,253], '#bd0f0f66')
+//                ->text('微信扫描二维码或长按识别',30,['center',1100],'#fffffff')
                 ->getPath();
+            $code_path = substr($code_path,1);
+
+            if ($user['avatar'] != ''){
+                        //创建图片的实例
+                $dst = imagecreatefromstring(file_get_contents($code_path));
+                $src = imagecreatefromstring(file_get_contents($user['avatar']));
+
+                //获取覆盖图图片的宽高
+                list($src_w, $src_h) = getimagesize($user['avatar']);
+
+                //将覆盖图复制到目标图片上，最后个参数100是设置透明度（100是不透明），这里实现不透明效果
+                imagecopymerge($dst, $src, 110, 298, 0, 0, $src_w, $src_h, 100);
+
+                $outfile = 'uploads/qrcode/'.time().'.png';
+                imagepng($dst, $outfile);//根据需要生成相应的图片
+                imagedestroy($dst);
+                $code_path = '/'.$outfile;
+            }
             $user->poster = $code_path;
             $user->save();
         }

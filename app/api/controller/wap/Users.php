@@ -104,24 +104,27 @@ class Users extends Base {
         if ($parent == null&&$user == null){
             return $this->returnAjax("没有介绍人 无法注册！",0);
         }
-
-
-        $sms = Db::name("users_sms")
-            ->where("mobile",$username)
-            ->where("code",$code)
-            ->order("id","DESC")->find();
-        if(empty($sms)){
-            return $this->returnAjax("您填写的验证码错误",0);
-        }
-        $setting = new Setting();
-        $config = $setting->getConfigData("sms");
-        if(($sms["create_time"] + (60 * $config["duration_time"])) < time()){
-            return $this->returnAjax("您的验证码己过期，请重新发送。",0);
+        if (input('parent_id')&&$user->parent_id == null){
+            return $this->returnAjax("没有介绍人 无法注册！",0);
         }
 
-        if(Db::name("users")->where("mobile",$username)->count()){
-            return $this->returnAjax("您填写的手机号码己存在！",0);
-        }
+
+//        $sms = Db::name("users_sms")
+//            ->where("mobile",$username)
+//            ->where("code",$code)
+//            ->order("id","DESC")->find();
+//        if(empty($sms)){
+//            return $this->returnAjax("您填写的验证码错误",0);
+//        }
+//        $setting = new Setting();
+//        $config = $setting->getConfigData("sms");
+//        if(($sms["create_time"] + (60 * $config["duration_time"])) < time()){
+//            return $this->returnAjax("您的验证码己过期，请重新发送。",0);
+//        }
+//
+//        if(Db::name("users")->where("mobile",$username)->count()){
+//            return $this->returnAjax("您填写的手机号码己存在！",0);
+//        }
 
         $group_id = Db::name("users_group")->order('minexp','ASC')->value("id");
         if ($user == null){
