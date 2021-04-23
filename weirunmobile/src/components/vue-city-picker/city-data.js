@@ -138,36 +138,7 @@ export const province = [{
 	"text": "甘肃省",
 	"parentId": 0
 },
-{
-	"value": 3126,
-	"text": "青海省",
-	"parentId": 0
-},
-{
-	"value": 3178,
-	"text": "宁夏回族自治区",
-	"parentId": 0
-},
-{
-	"value": 3206,
-	"text": "新疆维吾尔自治区",
-	"parentId": 0
-},
-{
-	"value": 3325,
-	"text": "台湾省",
-	"parentId": 0
-},
-{
-	"value": 3716,
-	"text": "香港特别行政区",
-	"parentId": 0
-},
-{
-	"value": 3738,
-	"text": "澳门特别行政区",
-	"parentId": 0
-}];
+];
 
 
 export const city = [{
