@@ -91,11 +91,12 @@ class Users extends Base {
             return $this->returnAjax("密码不能包含空格字符！",0);
         }else if(!Check::password($password)){
             return $this->returnAjax("密码长度请控制在6-18字符！",0);
-        } else if(!Check::mobile($username)){
-            return $this->returnAjax("您填写的手机号码不正确！",0);
-        }else if(empty($code)){
-            return $this->returnAjax("请填写验证码！",0);
+        } else if(!Check::mobile($username)) {
+            return $this->returnAjax("您填写的手机号码不正确！", 0);
         }
+//        }else if(empty($code)){
+//            return $this->returnAjax("请填写验证码！",0);
+//        }
 
         $parent = UserModel::where(['id' => input('parent_id')])->find();
         $user_id = Db::name("users_token")->where("token",input('token'))->value('user_id');

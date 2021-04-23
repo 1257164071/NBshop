@@ -1,5 +1,6 @@
 <template>
     <div>
+
         <nav-bar
                 title="资讯详情"
                 left-arrow
@@ -19,7 +20,8 @@
                 <span><van-icon name="clock-o" />{{data.create_time}}</span>
                 <span><van-icon name="eye-o" />{{data.hits}}</span>
             </div>
-            <div class="content clear" v-html="data.content">{{data.content}}</div>
+
+            <div style="width: 100%;overflow: hidden;"  class="content clear" v-html="data.content"></div>
         </div>
 
     </div>
@@ -70,7 +72,10 @@
     }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss" >
+    img{
+        width: 100%;
+    }
     .main{
         background-color: #fff;
         width: 95%;
@@ -78,7 +83,7 @@
         margin-top: 10px;
         .title{
             width: 100%;
-            height: 40px;
+            height: 80px;
             line-height: 25px;
             padding: 0 10px;
             padding-top: 10px;

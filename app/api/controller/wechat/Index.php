@@ -55,9 +55,9 @@ class Index {
             return $this->returnXML(true);
         }
 
-//        if(($order["order_amount"] * 100) != $data["total_fee"]){
-//            return $this->returnXML(false);
-//        }
+        if(($order["order_amount"] * 100) != $data["total_fee"]){
+            return $this->returnXML(false);
+        }
 
         $payment = Db::name("payment")->where("id",$order["pay_type"])->find();
         if(empty($payment)){

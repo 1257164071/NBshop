@@ -120,8 +120,7 @@ class Payment {
                         $rs = WeChat::Payment()->createOrder([
                             'body'             => $web_name,
                             'openid'           => $wecatUsers["openid"],
-//                            'total_fee'        => $order["order_amount"] * 100,
-                            'total_fee'        => 1,
+                            'total_fee'        => $order["order_amount"] * 100,
                             'trade_type'       => 'JSAPI',
                             'notify_url'       => createUrl('api/wechat/notify', [], false, true),
                             'out_trade_no'     => $order["order_no"],

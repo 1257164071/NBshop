@@ -117,7 +117,9 @@ class Order {
                 "pid" => $userModel->id,
                 "type"=>'直推奖励',
             ]);
-            $givemoney = round($money*0.05,2);
+            $givemoney = bcmul($money,0.05,2);
+            $count = UserModel::where(['parent_id'=>$item->id])->where('shouru<99')->count();
+            $givemoney = bcdiv($givemoney,$count,2);
             if ($givemoney> 0.01){
                 $users = UserModel::where(['parent_id' => $item->id])->where('shouru < 99')->select();
                 foreach ($users as $item2){
@@ -132,12 +134,12 @@ class Order {
                         "operation"=>0,
                         "point"=>0,
                         "exp"=>0,
-                        "description"=>"平台发放回本奖励{$givemoney}元",
+                        "description"=>"平台发放共享奖励{$givemoney}元",
                         "amount"=> $givemoney,
                         "order_no" => $order_no,
                         "create_time"=>time(),
                         "pid" => $item->id,
-                        "type"=>'回本奖励',
+                        "type"=>'共享奖励',
                     );
                 }
             }
@@ -189,35 +191,35 @@ class Order {
                 "pid" => $userModel->id,
                 "type"=>'重复消费',
             ]);
-            $givemoney = round($money*0.05,2);
-            if ($givemoney>0.01){
-                $users = UserModel::where(['parent_id' => $item->id])->where('shouru < 99')->select();
-                foreach ($users as $item2){
-                    $users_all[] = array(
-                        'id' => $item2['id'],
-                        'amount' => Db::raw("amount+".$givemoney),
-                        'shouru' => Db::raw("shouru+".$givemoney)
-                    );
-                    $user_logs[] = array(
-                        "user_id"=>$item2['id'],
-                        "action"=>4,
-                        "operation"=>0,
-                        "point"=>0,
-                        "exp"=>0,
-                        "description"=>"平台发放回本奖励{$givemoney}元",
-                        "amount"=> $givemoney,
-                        "order_no" => $order_no,
-                        "create_time"=>time(),
-                        "pid" => $item->id,
-                        "type"=>'回本奖励',
-                    );
-                }
-            }
+//            $givemoney = round($money*0.05,2);
+//            if ($givemoney>0.01){
+//                $users = UserModel::where(['parent_id' => $item->id])->where('shouru < 99')->select();
+//                foreach ($users as $item2){
+//                    $users_all[] = array(
+//                        'id' => $item2['id'],
+//                        'amount' => Db::raw("amount+".$givemoney),
+//                        'shouru' => Db::raw("shouru+".$givemoney)
+//                    );
+//                    $user_logs[] = array(
+//                        "user_id"=>$item2['id'],
+//                        "action"=>4,
+//                        "operation"=>0,
+//                        "point"=>0,
+//                        "exp"=>0,
+//                        "description"=>"平台发放共享奖励{$givemoney}元",
+//                        "amount"=> $givemoney,
+//                        "order_no" => $order_no,
+//                        "create_time"=>time(),
+//                        "pid" => $item->id,
+//                        "type"=>'共享奖励',
+//                    );
+//                }
+//            }
             $item->save();
         }
-        $userModel->saveAll($users_all);
-
-        Db::name('users_log')->insertAll($user_logs);
+//        $userModel->saveAll($users_all);
+//
+//        Db::name('users_log')->insertAll($user_logs);
         Db::name("order")->where(["order_no"=>$order_no])->update(['fx_flag'=>1]);
         return true;
     }
