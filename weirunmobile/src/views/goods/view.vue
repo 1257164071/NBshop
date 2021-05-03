@@ -34,7 +34,7 @@
                 </div>
                 <div class="goods-info-box">
                     <span>库存: {{ products.store_nums }}件</span>
-                    <span>销量: {{ products.sale }}件</span>
+                    <span>销量: {{ products.sale+products.fake_sale }}件</span>
                 </div>
             </div>
 

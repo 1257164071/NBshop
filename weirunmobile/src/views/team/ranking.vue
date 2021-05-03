@@ -30,11 +30,11 @@
                               <img :src="item.avatar">
                             </div>
                             <div>
-                              <span style="margin-bottom: 10px">
+                              <span>
                                 {{item.nickname}}
                               </span>
                               <span>
-                                第{{index+1}}名
+                                <span style="color: #000000">第{{index+1}}名</span>收入{{item.shouru}}
                               </span>
                             </div>
                           </div>
@@ -193,11 +193,14 @@
                       width: 100%;
                       text-align: left;
                     }
+                    span:nth-child(1){
+                      font-size: 10px;
+                    }
                     span:last-child{
                       color: #b91922;
                       width: 100%;
                       text-align: left;
-                      margin-top: 6px;
+                      font-size: 10px;
                     }
                   }
                 }

@@ -1,7 +1,7 @@
 <template>
     <div>
         <van-nav-bar
-                title="资金明细"
+                title="销售记录"
                 left-arrow
                 :fixed="true"
                 :placeholder="true"

@@ -38,10 +38,13 @@
                         if(!path){
                             path = "/";
                         }
-                        this.$router.push({ path: path });
+                        path = "/";
+                        this.$router.push('/');
                     }else{
                         this.$router.push('/');
                     }
+                }).catch(err=>{
+                    alert('抱歉,因为您没有推荐人无法进行注册')
                 });
             }else{
                 this.$router.push('/');

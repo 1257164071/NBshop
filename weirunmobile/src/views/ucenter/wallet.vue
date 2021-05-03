@@ -50,7 +50,7 @@
             </div>
             <div @click="$router.push('/team/moneydetail')">
                 <span><img src="../../assets/images/wallet/10.png"></span>
-                <span>资金明细</span>
+                <span>销售记录</span>
             </div>
         </div>
     </div>

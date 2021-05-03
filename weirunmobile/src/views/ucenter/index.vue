@@ -7,7 +7,9 @@
                 <span class="avatar">
                     <img :src="avatar">
                 </span>
-                <span>{{username}}</span>
+                <span>
+                    {{username}}
+                </span>
             </div>
 
             <div class="amount">
@@ -66,7 +68,7 @@
                 <div class="list-box service-box">
                     <div class="box" @click="go('/ucenter/wallet')">
                         <span><img src="../../assets/images/ucenter/7.png"></span>
-                        <span>我的钱包</span>
+                        <span>销售收入</span>
                     </div>
                     <div class="box" @click="go('/ucenter/collect')">
                         <span><img src="../../assets/images/ucenter/8.png"></span>
@@ -78,7 +80,7 @@
                     </div>
                     <div class="box" @click="go('/team/index')">
                         <span><img src="../../assets/images/ucenter/14.png"></span>
-                        <span>我的团队</span>
+                        <span>销售部</span>
                     </div>
                     <div class="box" @click="go('/ucenter/coupon')">
                         <span><img src="../../assets/images/ucenter/10.png"></span>

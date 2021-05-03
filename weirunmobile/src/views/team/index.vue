@@ -8,10 +8,16 @@
                 @click-left="prev"
         />
         <div class="header">
-            <div class="title">我的分享</div>
+            <div class="title">销售部</div>
             <div class="info">
-                <div>可提现佣金</div>
+                <div>{{info[6]}} ({{info[5]}}) </div>
+                <div>可提现销售额</div>
                 <div>{{info[2]}}</div>
+                <div>
+                    <span>有效直推：<span>{{info[7]}}</span></span>
+                    <span>-</span>
+                    <span>总单数：<span>{{info[8]}}</span></span>
+                </div>
                 <div>
                     <span>今日收益(元)：<span>{{info[1]}}</span></span>
                     <span>|</span>
@@ -22,6 +28,9 @@
                   <a @click="$router.push('/ucenter/withdraw')">立即提现</a>
                 </div>
             </div>
+        </div>
+        <div class="share_father" @click="share_father">
+            推荐人: {{this.info[3]}}
         </div>
 
 
@@ -36,7 +45,7 @@
             </div>
             <div @click="$router.push('/team/moneydetail')">
                 <span><img src="../../assets/images/wallet/9.png"></span>
-                <span>佣金明细</span>
+                <span>销售记录</span>
             </div>
             <div @click="$router.push('/team/ranking')">
                 <span><img src="../../assets/images/wallet/10.png"></span>
@@ -77,12 +86,19 @@
         methods: {
             prev(){
                 this.$tools.prev();
+            },
+            share_father(){
+                alert('推荐人手机号:'+this.info[4]);
             }
         }
     }
 </script>
 
 <style lang="scss" scoped>
+    .share_father{
+        text-align: center;
+        margin-top: 10px;
+    }
     .header{
         width: 100%;
         background-image: url(../../assets/images/wallet-bg.png);
@@ -123,13 +139,28 @@
             text-align: center;
             div:nth-child(1){
                 padding-top: 15px;
+                font-size: 16px;
+                text-align: center;
+            }
+
+            div:nth-child(2){
+                padding-top: 15px;
                 font-size: 13px;
                 text-align: center;
             }
-            div:nth-child(2){
+            div:nth-child(3){
                 font-size: 23px;
             }
-            div:nth-child(3){
+            div:nth-child(4){
+                font-size: 13px;
+                padding-top: 10px;
+                span:nth-child(2){
+                    padding: 0 5px;
+                    position: relative;
+                    top: -1px;
+                }
+            }
+            div:nth-child(5){
                 font-size: 13px;
                 padding-top: 10px;
                 span:nth-child(2){
@@ -144,7 +175,7 @@
                   }
                 }
             }
-            div:nth-child(4){
+            div:nth-child(6){
               margin-top: 15px;
               a{
                 border-radius: 20px;

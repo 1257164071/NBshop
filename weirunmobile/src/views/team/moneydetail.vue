@@ -1,7 +1,7 @@
 <template>
     <div>
         <van-nav-bar
-                title="资金明细"
+                title="销售记录"
                 left-arrow
                 :fixed="true"
                 :placeholder="true"
@@ -22,15 +22,15 @@
                     <div class="list-item clear" v-for="(item, index) in list" :key="index">
                         <div class="t">
 <!--                            <span>{{item.action}}</span>-->
-                            <span>分享佣金</span>
-                            <span>{{item.action}}</span>
+                            <span>销售记录</span>
+                            <span></span>
                         </div>
                         <div class="box clear">
                             <div>
                                 <span><i class="icon iconfont">&#xe619;</i>时间</span>
                                 <span>{{item.time}}</span>
                             </div>
-                            <div>
+                            <div v-show="false">
                                 <span><i class="icon iconfont">&#xe610;</i>状态</span>
                                 <span>{{item.operation}}￥{{item.amount}}</span>
                             </div>

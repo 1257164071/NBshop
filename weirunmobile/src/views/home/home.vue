@@ -37,7 +37,7 @@
                 <img :src="img_1.image" @click="url(img_1.url)">
             </div>
 
-            <div class="host-box">
+            <div class="host-box" v-show="false">
                 <div class="host-title">
                     <span>热销排行</span>
                     <router-link to="/goods/hot" tag="span">更多</router-link>
@@ -66,7 +66,7 @@
                 </div>
             </div>
 
-            <div class="recommend-wrap">
+            <div class="recommend-wrap" v-show="false">
                 <div class="recommend-title">
                     <span>精品推荐</span>
                     <span @click="$router.push('/goods/recommend')">更多</span>

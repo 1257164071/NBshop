@@ -31,13 +31,18 @@
                             </div>
                             <div>
                               <span>
-                                {{item.username}}
+                                {{item.nickname}}
                               </span>
                               <span v-if="item.is_consumption === 0">
                                 普通会员
                               </span>
                               <span v-if="item.is_consumption === 1">
-                                消费者
+                                <span v-if="item.consumption_num >= 7">
+                                  消费商
+                                </span>
+                                <span v-else>
+                                  消费者
+                                </span>
                               </span>
                             </div>
                           </div>
