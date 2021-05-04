@@ -93,6 +93,9 @@
         created() {
             let users = this.$storage.get("users",true);
             this.parent_id = this.$route.query.parent_id;
+            if (this.parent_id === undefined){
+              this.parent_id = this.$storage.get("users",true).id
+            }
             this.amount = users.amount;
             this.$http.getUcenter().then((res)=>{
                 if(res.status){
@@ -103,9 +106,14 @@
         },
         watch: {
           '$route' () {
+
             this.parent_id = this.$route.query.parent_id;
+            if (this.parent_id === undefined){
+              this.parent_id = this.$storage.get("users",true).id
+            }
             this.page = 1;
             this.list = [];
+            this.finished = false;
             this.getList();//我的初始化方法
           }
         },
@@ -125,12 +133,12 @@
             },
             getList() {
                 this.isEmpty = false;
+                console.log(this.parent_id);
                 this.$http.getShareList({
                     type: this.isActive,
                     page: this.page,
                     parent_id: this.parent_id
                 }).then(result=>{
-                    console.log(result.data)
                     this.num = result.data.num;
                     if(result.data.list == undefined && this.page == 1){
                         this.isEmpty = true;

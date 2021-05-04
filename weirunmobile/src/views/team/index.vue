@@ -14,9 +14,9 @@
                 <div>可提现销售额</div>
                 <div>{{info[2]}}</div>
                 <div>
-                    <span>有效直推：<span>{{info[7]}}</span></span>
-                    <span>-</span>
-                    <span>总单数：<span>{{info[8]}}</span></span>
+                    <span>我的分享：<span>{{info[7]}}</span></span>
+                    <span></span>
+                    <span>我的销售：<span>{{info[8]}}</span></span>
                 </div>
                 <div>
                     <span>今日收益(元)：<span>{{info[1]}}</span></span>
