@@ -52,7 +52,7 @@ class A3Mall extends Command {
             case "fenxiao":
                 $time = $input->hasOption('time') ? $input->getOption('time') : $setting["complete_time"];
                 $count = Db::name("order")->where(["pay_status"=>1,"fx_flag"=>0])->where("pay_time","<=",(time() - ($time * 60 * 60 * 24)))->count();
-                Db::name("order")->where(["pay_status"=>1,"fx_flag"=>0])->where("pay_time","<=",(time() - ($time * 60 * 60 * 24)))->select()->each(function ($order){
+                Db::name("order")->where(["pay_status"=>1,"fx_flag"=>0])->where('status != 4 and status != 6')->where("pay_time","<=",(time() - ($time * 60 * 60 * 24)))->select()->each(function ($order){
                     Order::fx_exec($order['order_no']);
                     Order::fx_first_exec($order['order_no']);
                 });

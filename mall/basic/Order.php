@@ -9,7 +9,6 @@
 namespace mall\basic;
 
 use app\common\model\system\UsersLog;
-use http\Client\Curl\User;
 use mall\utils\CString;
 use think\facade\Db;
 use think\facade\Request;
@@ -72,8 +71,8 @@ class Order {
 
         return $order_id;
     }
-
     public static function fx_first_exec($order_no){
+        Db::startTrans();
         if(($order = Db::name("order")->where(["order_no"=>$order_no])->find()) == false){
             throw new \Exception("您要查找的订单不存在！",0);
         }
@@ -82,7 +81,6 @@ class Order {
 //        }
         $fx_setting = Db::name('fx_set')->where(['type'=>0])->order("id","asc")->select();
         $userModel = UserModel::find($order['user_id']);
-
         if ($order['fx_type'] != 1){
             return false;
         }
@@ -92,14 +90,12 @@ class Order {
         $user_logs = array();
         $level = 0;
         $parent_money = 0;
-
         $parentModel = $userModel;
         foreach ($userModel->ancestors as $key => $item){
 
             if ($item->is_consumption==0){
                 continue;
             }
-
 //            if ($item->consumption_num < $fx_setting[$level++]['condition']){
 //                continue;
 //            }
@@ -173,6 +169,7 @@ class Order {
         Db::name('users_log')->insertAll($user_logs);
         $userModel->save();
         Db::name("order")->where(["order_no"=>$order_no])->update(['fx_flag'=>1]);
+        Db::commit();
         return true;
     }
 
