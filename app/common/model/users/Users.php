@@ -67,7 +67,7 @@ class Users extends A3Mall{
 
     public function getAncestorsAttr()
     {
-        return Users::whereIn('id',$this->path_ids)->select();
+        return Users::whereIn('id',$this->path_ids)->order('id desc')->select();
     }
 
     public function getConsumptionNumberAttr()
@@ -90,12 +90,11 @@ class Users extends A3Mall{
     public function getList($condition=[],$size=10){
         $count = $this->withJoin("group")->where($condition)->count();
         $data = $this->withJoin("group")->where($condition)->order('users.id desc')->paginate($size);
-
         $list = array_map(function ($res){
             $res['time'] = $res->create_time;
             return $res;
         },$data->items());
-
+//
         return [
             "count"=>$count,
             "data"=>$list

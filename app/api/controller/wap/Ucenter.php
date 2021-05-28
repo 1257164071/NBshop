@@ -599,7 +599,7 @@ class Ucenter extends Base {
         Db::name('users')->where(['id' => Users::get("id")])->dec('amount',$data["price"])->update();
         Db::name('users_log')->insert(array(
             "user_id"=>Users::get("id"),
-            "action"=>4,
+            "action"=>5,
             "operation"=>1,
             "point"=>0,
             "exp"=>0,

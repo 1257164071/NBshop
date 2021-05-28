@@ -32,6 +32,12 @@ class Index extends Auth {
             if(!empty($key["title"])){
                 $condition[] = ["users.username","like",'%'.$key["title"].'%'];
             }
+            if(!empty($key["nickname"])){
+                $condition[] = ["users.nickname","like",'%'.$key["nickname"].'%'];
+            }
+            if(!empty($key["mobile"])){
+                $condition[] = ["users.mobile","=",$key["mobile"]];
+            }
 
             $users = new Users();
             $list = $users->getList($condition,$limit);
@@ -39,7 +45,6 @@ class Index extends Auth {
             if(empty($list['data'])){
                 return Response::returnArray("当前还没有数据哦！",1);
             }
-
             foreach($list['data'] as $k=>$v){
                 $tags = Db::name("users_tags")->where('id','in',$v['tags'])->select()->toArray();
 

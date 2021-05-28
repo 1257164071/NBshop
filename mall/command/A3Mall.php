@@ -9,6 +9,7 @@
 
 namespace mall\command;
 
+use app\api\controller\wap\Team;
 use mall\basic\Order;
 use mall\basic\Setting;
 use think\console\Command;
@@ -45,7 +46,7 @@ class A3Mall extends Command {
                 $time = $input->hasOption('time') ? $input->getOption('time') : $setting["complete_time"];
                 $count = Db::name("order")->where(["pay_status"=>1,"status"=>2])->where("pay_time","<=",(time() - ($time * 60 * 60 * 24)))->count();
                 Db::name("order")->where(["pay_status"=>1,"status"=>2])->where("pay_time","<=",(time() - ($time * 60 * 60 * 24)))->update([
-                    "completion_time"=>time(),"status"=>5
+                    "completion_time"=>time(),"status"=>5,'delivery_status'=>1
                 ]);
                 break;
             case "fenxiao":
@@ -67,6 +68,10 @@ class A3Mall extends Command {
                 $time = $input->hasOption('time') ? $input->getOption('time') : 30;
                 $count = Db::name("cart")->where("create_time","<=",(time() - ($time * 60 * 60 * 24)))->count();
                 Db::name("cart")->where("create_time","<=",(time() - ($time * 60 * 60 * 24)))->delete();
+                break;
+            case "order_tb":
+                $res = new Team;
+                $count = $res->copy_order_num();
                 break;
         }
 

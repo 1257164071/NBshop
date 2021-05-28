@@ -152,7 +152,8 @@ class Goods extends Base {
             "market_price"=>$goods["market_price"],
             "store_nums"=>$goods["store_nums"],
             "sale"=>$goods["sale"],
-            "content"=>$goods["content"]
+            "content"=>$goods["content"],
+            "fake_sale" => $goods['fake_sale']
         ];
 
         $data["comments"] = [];

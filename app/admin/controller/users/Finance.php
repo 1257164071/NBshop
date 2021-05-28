@@ -44,7 +44,8 @@ class Finance extends Auth {
     public function fund(){
         if(Request::isAjax()){
             $limit = Request::get("limit");
-            $condition = ["log.action"=>0];
+//            $condition = ["log.action"=>0];
+            $condition = [];
 
             $usersLog = new UsersLog();
             $list = $usersLog->getList($condition,$limit);
@@ -202,10 +203,16 @@ class Finance extends Auth {
 //            }
             Db::startTrans();
             try {
-                $status = 0;
+                $status = input('status');
                 $order_no = 0;
                 $log = Db::name("users_withdraw_log")->where(["id"=>$id])->find();
-                if (input('status') == 1&&$log['type'] == 3){
+                $yidakuan = 0;
+                if ($status == 3){
+                    $yidakuan = 1;
+                    $status = 1;
+                    $data['status'] = 1;
+                }
+                if ($status == 1&&$log['type'] == 3&&$yidakuan==0){
                     $redpack = new Redpack;
                     $openid = Db::name('wechat_users')->where(['user_id'=>$user['id']])->value('openid');
 
@@ -228,10 +235,10 @@ class Finance extends Auth {
                     if ($result["result_code"] == "SUCCESS"){
                         $status = 1;
                     } else {
-                        dump($row['price']);
-                        dump($result);die;
+//                        dump($row['price']);
+//                        dump($result);die;
                         $status = 2;
-                        throw new \Exception("微信红包打款失败！",0);
+                        return Response::returnArray($result['return_msg'],0);
                     }
                 }
                 Db::name("users_withdraw_log")->where(["id"=>$id])->update([
@@ -241,7 +248,7 @@ class Finance extends Auth {
                     "update_time"=>time()
                 ]);
 
-                if($data["status"] == 3){
+                if($data["status"] == 2&&$yidakuan==0){
                     Db::name("users")
                         ->where(["id"=>$row["user_id"]])
                         ->inc("amount",$row["price"])->update();

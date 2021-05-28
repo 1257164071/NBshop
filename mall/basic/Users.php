@@ -53,7 +53,7 @@ class Users {
             ->where("o.type",$type)
             ->where("uc.goods_id",$id)
             ->where("uc.status",1)->count();
-
+        $base_url = request()->domain();
         $total = ceil($count / $size);
         if($total == $page -1){
             throw new \Exception("没有数据了哦！",-1);
@@ -68,11 +68,12 @@ class Users {
             ->where("uc.status",1)
             ->order("uc.id","DESC")->paginate($size);
 
-        $rs = array_map(function ($data){
+        $rs = array_map(function ($data)use($base_url){
             $array = [];
             $username = !empty($data["nickname"]) ? $data["nickname"] : $data["username"];
             $array['time'] = date("Y-m-d",$data['comment_time']);
-            $array['avatar'] = self::avatar($data['avatar']);
+            // $array['avatar'] = self::avatar($data['avatar']);
+            $array['avatar'] = substr($data['avatar'],0,1)=='/'?$base_url.$data['avatar']:$data['avatar'];
             $array['content'] = strip_tags($data['contents']);
             $array['reply_content'] = strip_tags($data['reply_content']);
 

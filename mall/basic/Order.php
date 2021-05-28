@@ -82,68 +82,91 @@ class Order {
 //        }
         $fx_setting = Db::name('fx_set')->where(['type'=>0])->order("id","asc")->select();
         $userModel = UserModel::find($order['user_id']);
+
         if ($order['fx_type'] != 1){
             return false;
         }
+
         $userModel->is_consumption=1;
         $users_all = array();
         $user_logs = array();
         $level = 0;
+        $parent_money = 0;
+
+        $parentModel = $userModel;
         foreach ($userModel->ancestors as $key => $item){
-            if ($item->is_consumption==0||$level>=7){
+
+            if ($item->is_consumption==0){
                 continue;
             }
 
-            if ($item->consumption_num < $fx_setting[$level++]['condition']){
-                continue;
+//            if ($item->consumption_num < $fx_setting[$level++]['condition']){
+//                continue;
+//            }
+            if ($item->consumption_num >= 7){
+                $rate = 0.5;
+            } else {
+                $rate = 0.3;
             }
-            if ($fx_setting[$key]['level'] == 1) {
+            if ($parent_money == 0) {
                 $item->consumption_num = Db::raw('consumption_num+1');
+                $money = round($order['order_amount']*0.3,2);
+                $parent_money = $money;
+            }else{
+                $money = round($parent_money * $rate,2);
+                $parent_money = $money;
             }
-
-            $money = round($order['order_amount']*($fx_setting[$key]['rate']/100),2);
+            if ($money < 0.05){
+                continue;
+            }
+            $item->consumption_order_num = Db::raw('consumption_order_num+1');
             $item->amount += $money;
             $item->shouru += $money;
+
             Db::name("users_log")->insert([
                 "user_id"=>$item->id,
                 "action"=>4,
                 "operation"=>0,
                 "point"=>0,
                 "exp"=>0,
-                "description"=>"推荐<{$item->nickname}>奖励金额{$money}元",
+                "description"=>"您分享的({$parentModel->nickname})销售部产生了订单 您将获得 {$money} 元",
                 "amount"=> $money,
                 "order_no" => $order_no,
                 "create_time"=>time(),
-                "pid" => $userModel->id,
+                "pid" => $parentModel->id,
                 "type"=>'直推奖励',
             ]);
+
+
             $givemoney = bcmul($money,0.05,2);
-            $count = UserModel::where(['parent_id'=>$item->id])->where('shouru<99')->count();
-            $givemoney = bcdiv($givemoney,$count,2);
-            if ($givemoney> 0.01){
-                $users = UserModel::where(['parent_id' => $item->id])->where('shouru < 99')->select();
-                foreach ($users as $item2){
-                    $users_all[] = array(
-                        'id' => $item2['id'],
-                        'amount' => Db::raw("amount+".$givemoney),
-                        'shouru' => Db::raw("shouru+".$givemoney)
-                    );
-                    $user_logs[] = array(
-                        "user_id"=>$item2['id'],
-                        "action"=>4,
-                        "operation"=>0,
-                        "point"=>0,
-                        "exp"=>0,
-                        "description"=>"平台发放共享奖励{$givemoney}元",
-                        "amount"=> $givemoney,
-                        "order_no" => $order_no,
-                        "create_time"=>time(),
-                        "pid" => $item->id,
-                        "type"=>'共享奖励',
-                    );
+            $count = UserModel::where(['parent_id'=>$item->id,'is_consumption'=>1])->where('shouru<99')->count();
+            if ($count > 0){
+                $givemoney = bcdiv($givemoney,$count,2);
+                if ($givemoney>= 0.01){
+                    $users = UserModel::where(['parent_id' => $item->id,'is_consumption'=>1])->where('shouru < 99')->select();
+                    foreach ($users as $item2){
+                        $users_all[] = array(
+                            'id' => $item2['id'],
+                            'amount' => Db::raw("amount+".$givemoney),
+                            'shouru' => Db::raw("shouru+".$givemoney)
+                        );
+                        $user_logs[] = array(
+                            "user_id"=>$item2['id'],
+                            "action"=>4,
+                            "operation"=>0,
+                            "point"=>0,
+                            "exp"=>0,
+                            "description"=>"平台发放共享奖励{$givemoney}元",
+                            "amount"=> $givemoney,
+                            "order_no" => $order_no,
+                            "create_time"=>time(),
+                            "pid" => $item->id,
+                            "type"=>'共享奖励',
+                        );
+                    }
                 }
             }
-
+            $parentModel = $item;
             $item->save();
         }
         $userModel->saveAll($users_all);
@@ -158,22 +181,30 @@ class Order {
         if(($order = Db::name("order")->where(["order_no"=>$order_no])->find()) == false){
             throw new \Exception("您要查找的订单不存在！",0);
         }
-//        if($order["pay_status"] == 1){
-//            throw new \Exception("您查找的订单己支付！",0);
-//        }
         $fx_setting = Db::name('fx_set')->where(['type'=>1])->order("id","asc")->select();
         $userModel = UserModel::find($order['user_id']);
         if ($order['fx_type'] != 2){
             return false;
         }
-        $users_all = array();
-        $user_logs = array();
-        $level = 0;
+        $parent_money = 0;
+        $parentModel = $userModel;
+
         foreach ($userModel->ancestors as $key => $item){
-            if ($item->is_consumption==0||$level >= 5){
+            if ($item->is_consumption==0){
                 continue;
             }
-            $money = round($order['order_amount']*($fx_setting[$level++]['rate']/100),2);
+            if ($parent_money == 0) {
+                $item->consumption_num = Db::raw('consumption_num+1');
+                $money = round($order['order_amount'] * 0.15, 2);
+                $parent_money = $money;
+            }else{
+                $money = round($parent_money * 0.15,2);
+                $parent_money = $money;
+            }
+            if ($money < 0.05){
+                continue;
+            }
+            $item->consumption_order_num = Db::raw('consumption_order_num+1');
             $item->amount += $money;
 
             $item->shouru += $money;
@@ -184,42 +215,16 @@ class Order {
                 "operation"=>0,
                 "point"=>0,
                 "exp"=>0,
-                "description"=>"用户<{$item->nickname}>重复消费 奖励金额{$money}元",
+                "description"=>"您分享的({$parentModel->nickname})销售部重复消费您将获得佣金{$money}",
                 "amount"=> $money,
                 "order_no" => $order_no,
                 "create_time"=>time(),
-                "pid" => $userModel->id,
+                "pid" => $parentModel->id,
                 "type"=>'重复消费',
             ]);
-//            $givemoney = round($money*0.05,2);
-//            if ($givemoney>0.01){
-//                $users = UserModel::where(['parent_id' => $item->id])->where('shouru < 99')->select();
-//                foreach ($users as $item2){
-//                    $users_all[] = array(
-//                        'id' => $item2['id'],
-//                        'amount' => Db::raw("amount+".$givemoney),
-//                        'shouru' => Db::raw("shouru+".$givemoney)
-//                    );
-//                    $user_logs[] = array(
-//                        "user_id"=>$item2['id'],
-//                        "action"=>4,
-//                        "operation"=>0,
-//                        "point"=>0,
-//                        "exp"=>0,
-//                        "description"=>"平台发放共享奖励{$givemoney}元",
-//                        "amount"=> $givemoney,
-//                        "order_no" => $order_no,
-//                        "create_time"=>time(),
-//                        "pid" => $item->id,
-//                        "type"=>'共享奖励',
-//                    );
-//                }
-//            }
+            $parentModel = $item;
             $item->save();
         }
-//        $userModel->saveAll($users_all);
-//
-//        Db::name('users_log')->insertAll($user_logs);
         Db::name("order")->where(["order_no"=>$order_no])->update(['fx_flag'=>1]);
         return true;
     }
@@ -454,6 +459,143 @@ class Order {
                 "deliver_goods"
             );
         }catch (\Exception $e){}
+
+        return true;
+    }
+    public static function autoPrintGoods($order, $order_goods_id,$distribution_code,$freight_id, $admin_id){
+        $order_id = $order->id;
+        if ($order_id <= 0) {
+            throw new \Exception("参数错误！", 0);
+        }
+
+        if (empty($order_goods_id)) {
+            throw new \Exception("请选择要发货的商品", 0);
+        }
+
+
+        if (empty($distribution_code)) {
+            throw new \Exception("请填写配送单号", 0);
+        }
+
+        if (empty($freight_id)) {
+            throw new \Exception("请选择物流公司", 0);
+        }
+
+        $refund = Db::name('order_refundment')->where([
+            "order_id"=>$order_id,"pay_status"=>0,"is_delete"=>0
+        ])->find();
+        if(!empty($refund)){
+            throw new \Exception("此订单有未处理的退款申请",0);
+        }
+
+//        $order = Db::name("order")->where(["id"=>$order_id])->find();
+
+        if(empty($order)){
+            throw new \Exception("该订单不存在！",0);
+        }
+//        $address = Area::get_area([$order['province'], $order['city'], $order['area']]);
+
+        $data = [
+            'order_id' => $order_id,
+            'user_id' => $order["user_id"],
+            'name' => $order->accept_name,
+            'zip' => 276400,
+            'phone' => $order->mobile,
+            'province' => $order['province'],
+            'city' => $order['city'],
+            'area' => $order['area'],
+            'address' => $order->address,
+            'mobile' => $order->mobile,
+            'freight' => $order["real_freight"],
+            'distribution_code' => $distribution_code,
+            'distribution_id' => $order["distribution_id"],
+            'note' => '发货备注',
+            'create_time' => time(),
+            'freight_id' => $freight_id
+        ];
+
+        $data['admin_id'] = $admin_id;
+
+        $delivery_id = Db::name('order_delivery')->insert($data);
+
+        return true;
+    }
+    public static function autoSendDistributionGoods($order, $order_goods_id, $admin_id){
+        $order_id = $order->id;
+        if ($order_id <= 0) {
+            throw new \Exception("参数错误！", 0);
+        }
+
+        if (empty($order_goods_id)) {
+            throw new \Exception("请选择要发货的商品", 0);
+        }
+
+        $refund = Db::name('order_refundment')->where([
+            "order_id"=>$order_id,"pay_status"=>0,"is_delete"=>0
+        ])->find();
+        if(!empty($refund)){
+            throw new \Exception("此订单有未处理的退款申请",0);
+        }
+
+        $order = Db::name("order")->where(["id"=>$order_id])->find();
+
+        if(empty($order)){
+            throw new \Exception("该订单不存在！",0);
+        }
+
+        $delivery_id = Db::name('order_delivery')->where(['order_id'=>$order_id])->value('id');
+        $admin = Db::name("system_users")->where(["id"=>$admin_id])->find();
+        if ($order['pay_type'] == 0) {
+            //减少库存量
+            $orderGoodsList = Db::name("order_goods")->where("id","in",$order_goods_id)->select()->toArray();
+            foreach ($orderGoodsList as $val) {
+                self::updateStock([
+                    "goods_id" => $val["goods_id"],
+                    "product_id" => $val["product_id"],
+                    "goods_nums"=>$val["goods_nums"]
+                ], "-");
+            }
+        }
+
+        //更新发货状态
+        $orderGoods = Db::name("order_goods")->field('count(*) as num')->where([
+            "is_send"=>0,"order_id"=>$order_id
+        ])->find();
+
+//        $sendStatus = 2; //部分发货
+//        if (count($order_goods_id) >= $orderGoods['num']) {
+//            $sendStatus = 1; //全部发货
+//        }
+        $sendStatus = 1; //
+
+        foreach ($order_goods_id as $val) {
+            Db::name("order_goods")->where(["id"=>$val])->update([
+                "is_send" => 1,
+                "distribution_id" => $delivery_id
+            ]);
+        }
+
+        //更新发货状态
+        Db::name('order')->where(['id'=>$order_id])->update([
+            'distribution_status' => $sendStatus,
+            'send_time' =>time()
+        ]);
+
+        Db::name("order_log")->insert([
+            'order_id' => $order_id,
+            'username' => $admin["username"],
+            'action' => '发货',
+            'result' => '成功',
+            'note' => '订单【' . $order["order_no"] . '】由【管理员】' . $admin["username"] . '发货',
+            'create_time' => time()
+        ]);
+
+//        try {
+//            Sms::send(
+//                ["mobile"=>$order["mobile"],"order_no"=>$order["order_no"]],
+//                "deliver_goods"
+//            );
+//        }catch (\Exception $e){}
 
         return true;
     }

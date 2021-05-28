@@ -17,19 +17,19 @@
                 <div class="layui-tab-content">
                     <div class="layui-tab-item layui-show">
 
-                            <div class="layui-form-item">
-                                <label class="layui-form-label">选择分组</label>
-                                <div class="layui-input-block">
-                                    <select name="group_id" lay-verify="required" lay-reqtext="请选择分组">
-                                        <option value="">请选择分组</option>
-                                        {if !empty($cat)}
-                                        {volist name="cat" id="value"}
-                                        <option value="{$value.id}"{if !empty($data.group_id) && $value.id==$data.group_id} selected{/if}>{$value.name}</option>
-                                        {/volist}
-                                        {/if}
-                                    </select>
-                                </div>
-                            </div>
+<!--                            <div class="layui-form-item">-->
+<!--                                <label class="layui-form-label">选择分组</label>-->
+<!--                                <div class="layui-input-block">-->
+<!--                                    <select name="group_id" lay-verify="required" lay-reqtext="请选择分组">-->
+<!--                                        <option value="">请选择分组</option>-->
+<!--                                        {if !empty($cat)}-->
+<!--                                        {volist name="cat" id="value"}-->
+<!--                                        <option value="{$value.id}"{if !empty($data.group_id) && $value.id==$data.group_id} selected{/if}>{$value.name}</option>-->
+<!--                                        {/volist}-->
+<!--                                        {/if}-->
+<!--                                    </select>-->
+<!--                                </div>-->
+<!--                            </div>-->
 
                             <div class="layui-form-item">
                                 <label class="layui-form-label">用户名</label>
@@ -90,6 +90,13 @@
                                     <input type="radio" name="sex" title="女" value="2" {if isset($data.sex) && $data.sex==2}checked="checked"{/if}>
                                 </div>
                             </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">会员状态</label>
+                                <div class="layui-input-block">
+                                    <input type="radio" name="is_consumption" title="普通会员" value="0" {if empty($data.is_consumption) || $data.is_consumption==0}checked="checked"{/if}>
+                                    <input type="radio" name="is_consumption" title="消费者" value="1" {if isset($data.is_consumption) && $data.is_consumption==1}checked="checked"{/if}>
+                                </div>
+                            </div>
 
                             <div class="layui-form-item">
                                 <label class="layui-form-label">状态</label>
@@ -123,7 +130,7 @@
             var layer = layui.layer;
             var laydate = layui.laydate;
 
-            
+
             form.on('submit(layui-submit-filter)', function (data) {
                 var index = layer.load(1, { shade: [0.2,'#fff'] });
                 $.post('{:createUrl("editor")}', data.field, function (result) {

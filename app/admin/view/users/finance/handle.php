@@ -70,6 +70,7 @@
                                 <input type="radio" name="status" title="审核" value="0" {if empty($row.status) || $row.status==0}checked="checked"{/if}>
                                 <input type="radio" name="status" title="通过" value="1" {if isset($row.status) && $row.status==1}checked="checked"{/if}>
                                 <input type="radio" name="status" title="拒绝" value="2" {if isset($row.status) && $row.status==2}checked="checked"{/if}>
+                                <input type="radio" name="status" title="已手动打款" value="3" {if isset($row.status) && $row.status==3}checked="checked"{/if}>
                             </div>
                         </div>
                         {/if}

@@ -11,31 +11,31 @@
     <div class="layui-card">
         <div class="layui-card-body">
             <form class="layui-form layui-form-pane" action="">
-                
+
                 <div class="layui-form-item">
-                    
+
                     <div class="layui-inline">
                         <label class="layui-form-label seller-inline-2">查找类型：</label>
                         <div class="layui-input-inline seller-inline-4">
                         <select name="type">
                             <option value="0">订单号</option>
                             <option value="1">用户名</option>
-                        </select>   
+                        </select>
                         </div>
                     </div>
-                    
+
                     <div class="layui-inline">
                         <label class="layui-form-label seller-inline-2">关键字：</label>
                         <div class="layui-input-inline seller-inline-4">
                             <input type="text" name="title" placeholder="请输入关键字" autocomplete="off" class="layui-input">
                         </div>
                     </div>
-                    
+
                     <div class="layui-inline">
                         <button type="button" id="search-btn" class="layui-btn layui-btn-sm layui-bg-light-blue"><i class="layui-icon layui-icon-search"></i> 搜索</button>
                     </div>
                 </div>
-                
+
             </form>
         </div>
     </div>
@@ -50,11 +50,14 @@
 <script type="text/html" id="list-toolbar">
     <div class="layui-btn-container">
         <button lay-event="refresh" type="button" class="layui-btn layui-btn-sm layui-bg-red"><i class="layui-icon">&#xe9aa;</i> 刷新</button>
+        <button lay-event="url" type="button" class="layui-btn layui-btn-sm layui-bg-light-blue" id="dayin"><i class="layui-icon">&#xe61f;</i> 打印</button>
+        <button lay-event="url" type="button" class="layui-btn layui-btn-sm layui-bg-light-blue" id="fahuo"><i class="layui-icon">&#xe61f;</i> 发货</button>
     </div>
 </script>
 
 <script type="text/html" id="list-bar">
-    <a class="layui-btn layui-btn-xs" lay-event="edit">详情</a>
+    <a class="layui-btn layui-btn-xs" lay-event="print">打印</a>
+    <a class="layui-btn layui-btn-xs" lay-event="done">发货</a>
 </script>
 
 <script>
@@ -71,13 +74,14 @@ layui.use(['table','form'], function () {
         , cols: [[
                   {type: 'checkbox'}
                 , {field: 'order_no', title: '订单号',align:'center',width:180}
-                , {field: 'username', title: '用户名'}
-                , {field: 'name', title: '收货人',width:120,align:'center'}
-                , {field: 'distribution_code', title: '物流单号',width:120,align:'center'}
-                , {field: 'title', title: '物流公司',width:120,align:'center'}
-                , {field: 'freight', title: '运费',width:120,align:'center'}
+                // , {field: 'username', title: '用户名'}
+                , {field: 'accept_name', title: '收货人'}
+                , {field: 'mobile', title: '电话',width:120,align:'center'}
+                , {field: 'real_amount', title: '订单金额',width:120,align:'center'}
+                // , {field: 'title', title: '物流公司',width:120,align:'center'}
+                // , {field: 'freight', title: '运费',width:120,align:'center'}
                 , {field: 'create_time', title: '创建时间',width:180,align:'center'}
-                , {fixed: 'right', align: 'center', title: '操作', toolbar: '#list-bar', width: 90}
+                , {fixed: 'right', align: 'center', title: '操作', toolbar: '#list-bar', width: 140}
             ]]
         , page: true
         , id: 'list-table'
@@ -99,7 +103,46 @@ layui.use(['table','form'], function () {
         }, 'data');
     });
 
-    //头工具栏事件
+
+    $('#dayin').on('click', function () {
+        var checkStatus = table.checkStatus('list-table');
+        var ids = [];
+
+        $(checkStatus.data).each(function (i, o) {
+              ids.push(o.id);
+        })
+        if (ids.length < 1) {
+            layer.msg('无选中项');
+            return false;
+        }
+        ids = ids.join(",");
+        layer.confirm('确定要对选中项打印吗？', function (index) {
+          window.open('{:createUrl("detail")}?id='+ids,'面单打印','height=100, width=400');
+            layer.close(index);
+        });
+    });
+    $('#fahuo').on('click', function () {
+        var checkStatus = table.checkStatus('list-table');
+        var ids = [];
+
+        $(checkStatus.data).each(function (i, o) {
+              ids.push(o.id);
+        })
+        if (ids.length < 1) {
+            layer.msg('无选中项');
+            return false;
+        }
+        ids = ids.join(",");
+        layer.confirm('确定要对选中项进行发货操作吗？', function (index) {
+            $.get("{:createUrl('send_goods')}", {ids: ids}, function (res) {
+                  layer.msg(res.msg, {time: 1000, icon: 1});
+                window.location.reload();
+            });
+          // window.location.href='{:createUrl("detail")}?id='+ids
+          // window.open('{:createUrl("detail")}?id='+ids,'面单打印','height=100, width=400');
+            layer.close(index);
+        });
+    });
     table.on('toolbar(list-box)', function (obj) {
         switch (obj.event) {
             case 'refresh':
@@ -114,8 +157,20 @@ layui.use(['table','form'], function () {
         if (obj.event === 'edit') {
             window.location.href = '{:createUrl("detail")}?id='+data.id;
         }
+        if (obj.event === 'print') {
+          window.open('{:createUrl("detail")}?id='+data.id,'面单打印','height=800, width=400');
+        }
+        if (obj.event === 'done') {
+          layer.confirm('确定要对选中项进行发货操作吗？', function (index) {
+                $.get("{:createUrl('send_goods')}", {ids: data.id}, function (res) {
+                      layer.msg(res.msg, {time: 1000, icon: 1});
+                    window.location.reload();
+                });
+                layer.close(index);
+            });
+        }
     });
-    
+
 });
 </script>
 

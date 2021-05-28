@@ -609,6 +609,24 @@ class Order extends Base {
             return $this->returnAjax("您的订单己评价！",0);
         }
 
+        $order_goods = Db::name("order_goods")->where([
+            "order_id"=>$id
+        ])->select()->toArray();
+
+        foreach($order_goods as $key=>$value){
+            Db::name("users_comment")->insert([
+                'id' => Users::get("id"),
+                "status"=>1,
+                "contents"=>$message,
+                "point"=>$rate,
+                "comment_time"=>time(),
+                'goods_id' => $value["goods_id"],
+                "order_no"  =>  $order['order_no'],
+                'user_id'   =>  Users::get("id")
+            ]);
+        }
+
+//
         $comment = Db::name("users_comment")->where([
             "user_id"=>Users::get("id"),
             "order_no"=>$order["order_no"],
@@ -772,9 +790,12 @@ class Order extends Base {
         $order["region"] = Area::get_area([$order['province'],$order['city'],$order['area']],' ');
 
         $express = ["expName"=>"", "number"=>"", "takeTime"=>"", "updateTime"=>""];
+
         try{
-            $express = Aliyun::query($orderDelivery["distribution_code"],$type);
+            $express = Aliyun::query($orderDelivery["distribution_code"],$type,$order["send_time"]);
         }catch(\Exception $ex){
+            $express['expName'] = '中国邮政';
+            $express['number'] = $orderDelivery['distribution_code'];
             $express["list"][] = [
                 "status"=>"商家正在通知快递公司",
                 "time"=>date("Y-m-d H:i:s",$order["send_time"])

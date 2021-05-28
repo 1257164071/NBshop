@@ -11,7 +11,7 @@ namespace mall\library\delivery\aliyun;
 
 class Aliyun {
 
-    private static $host = "https://wuliu.market.alicloudapi.com"; //api访问链接
+    private static $host = "https://jisukdcx.market.alicloudapi.com"; //api访问链接
     public static $errorInfo = [
         201=>"快递单号错误",
         203=>"快递公司不存在",
@@ -21,7 +21,7 @@ class Aliyun {
         0=>"正常"
     ];
 
-    public static function query($no="",$type=""){
+    public static function query($no="",$type="", $time=''){
         $config = self::getConfig();
         if(empty($config["AppKey"])){
             throw new \Exception("参数AppKey不能为空",0);
@@ -32,28 +32,35 @@ class Aliyun {
         }else if(empty($no)){
             throw new \Exception("物流单号不能为空",0);
         }
-
         $headers = [];
         array_push($headers, "Authorization:APPCODE " . $config["AppCode"]);
-        $querys = "no=".$no;
-        if(!empty($type)){
-            $querys .= "&type=" . $type;
-        }
-        $url = self::$host . "/kdi" . "?" . $querys;
+        array_push($headers, "Content-Type".":"."application/json; charset=UTF-8");
+        $querys = "mobile=mobile&number={$no}&type=CHINAPOST";
+        $url = self::$host . "/express/query" . "?" . $querys;
 
         $result = self::get($url,$headers);
-
         list($header, $body) = explode("\r\n\r\n", $result["data"], 2);
         if ($result["code"] == 200) {
             $array = json_decode($body,true);
-            return [
-                "expName"=>$array["result"]["expName"],
-                "number"=>$array["result"]["number"],
-                "takeTime"=>$array["result"]["takeTime"],
-                "updateTime"=>$array["result"]["updateTime"],
-                "list"=>$array["result"]["list"],
-            ];
-        } else {
+            if ($array['status'] == 208){
+                return [
+                    "expName"=>'中国邮政',
+                    "number"=>$no,
+                    "updateTime"=>date("Y-m-d H:i:s",$time),
+                    "list"=>[[
+                        "status"=>"商家正在通知快递公司",
+                        "time"=>date("Y-m-d H:i:s",$time)
+                    ]],
+                ];
+            }else{
+                return [
+                    "expName"=>'中国邮政',
+                    "number"=>$no,
+                    "updateTime"=>$array["result"]["list"] != [] ? $array["result"]["list"][0]['time'] : $time,
+                    "list"=>$array['result']['list'],
+                ];
+            }
+        } else{
             if ($result["code"] == 400 && strpos($header, "Invalid Param Location") !== false) {
                 throw new \Exception("参数错误",$result["code"]);
             } elseif ($result["code"] == 400 && strpos($header, "Invalid AppCode") !== false) {

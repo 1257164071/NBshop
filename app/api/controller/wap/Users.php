@@ -20,6 +20,7 @@ class Users extends Base {
     public function login(){
         $username = Request::param("username","","trim,strip_tags");
         $password = Request::param("password","","trim,strip_tags");
+            // return $this->returnAjax("抱歉暂时不开放网页登录！",0);
 
         if(empty($username)){
             return $this->returnAjax("请填写手机号码！",0);
@@ -123,9 +124,9 @@ class Users extends Base {
 //            return $this->returnAjax("您的验证码己过期，请重新发送。",0);
 //        }
 //
-//        if(Db::name("users")->where("mobile",$username)->count()){
-//            return $this->returnAjax("您填写的手机号码己存在！",0);
-//        }
+        if(Db::name("users")->where("mobile",$username)->count()){
+            return $this->returnAjax("您填写的手机号码己存在！",0);
+        }
 
         $group_id = Db::name("users_group")->order('minexp','ASC')->value("id");
         if ($user == null){
@@ -143,6 +144,8 @@ class Users extends Base {
                 'is_register'   =>  1,
             ];
             $user = new UserModel;
+            return $this->returnAjax("抱歉, 暂时不开放网页注册！",0);
+
             $user->save($data);
         } else {
             $user->mobile = $username;

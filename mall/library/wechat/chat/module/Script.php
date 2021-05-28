@@ -43,6 +43,22 @@ class Script extends BasicWeChat{
                 throw new \Exception('Invalid Resoponse Ticket.', '0');
             }
             $ticket = $result['ticket'];
+            Cache::set($cache_name, $ticket, 500);
+        }
+        return $ticket;
+    }
+    public function getRefreshTicket($type = 'jsapi', $appid = null){
+        is_null($appid) && $appid = $this->config["appid"];
+        $cache_name = "{$appid}_ticket_{$type}";
+        Cache::delete($cache_name);
+        $ticket = Cache::get($cache_name);
+        if (empty($ticket)) {
+            $url = "https://api.weixin.qq.com/cgi-bin/ticket/getticket?access_token=ACCESS_TOKEN&type={$type}";
+            $result = $this->httpGet($url);
+            if (empty($result['ticket'])) {
+                throw new \Exception('Invalid Resoponse Ticket.', '0');
+            }
+            $ticket = $result['ticket'];
             Cache::set($cache_name, $ticket, 5000);
         }
         return $ticket;
@@ -58,6 +74,33 @@ class Script extends BasicWeChat{
     public function getJsSign($url, $appid = null, $ticket = null){
         list($url,) = explode('#', $url);
         is_null($ticket) && $ticket = $this->getTicket('jsapi');
+        is_null($appid) && $appid = $this->config["appid"];
+        $data = ["url" => $url, "timestamp" => '' . time(), "jsapi_ticket" => $ticket, "noncestr" => Utils::createRandString(16)];
+        return [
+            'debug'     => false,
+            "appId"     => $appid,
+            "nonceStr"  => $data['noncestr'],
+            "timestamp" => $data['timestamp'],
+            "signature" => $this->getSignature($data, 'sha1'),
+            'jsApiList' => [
+                'updateAppMessageShareData', 'updateTimelineShareData', 'onMenuShareTimeline',
+                'onMenuShareAppMessage', 'onMenuShareQQ', 'onMenuShareWeibo', 'onMenuShareQZone',
+                'startRecord', 'stopRecord', 'onVoiceRecordEnd', 'playVoice', 'pauseVoice',
+                'stopVoice', 'onVoicePlayEnd', 'uploadVoice', 'downloadVoice',
+                'chooseImage', 'previewImage', 'uploadImage', 'downloadImage',
+                'translateVoice', 'getNetworkType', 'openLocation', 'getLocation',
+                'hideOptionMenu', 'showOptionMenu', 'hideMenuItems', 'showMenuItems',
+                'hideAllNonBaseMenuItem', 'showAllNonBaseMenuItem',
+                'closeWindow', 'scanQRCode', 'chooseWXPay', 'openProductSpecificView',
+                'addCard', 'chooseCard', 'openCard',
+            ],
+        ];
+    }
+    public function getJsSignTest($url, $appid = null, $ticket = null){
+        list($url,) = explode('#', $url);
+
+        is_null($ticket) && $ticket = $this->getRefreshTicket('jsapi');
+
         is_null($appid) && $appid = $this->config["appid"];
         $data = ["url" => $url, "timestamp" => '' . time(), "jsapi_ticket" => $ticket, "noncestr" => Utils::createRandString(16)];
         return [

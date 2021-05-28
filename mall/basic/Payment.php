@@ -127,6 +127,11 @@ class Payment {
                             'spbill_create_ip' => Request::ip(),
                         ]);
                         $options = WeChat::Payment()->createParamsForJsApi($rs["prepay_id"]);
+//                        if ($order['id'] == 266){
+//                            $options = WeChat::Script()->getJsSignTest(Request::post("url","") ? Request::post("url","") : Request::domain());
+//                            dump($options);die;
+//                        }
+
                         $result = [
                             "pay"=>1,
                             "order_id"=>$order["id"],
@@ -136,6 +141,7 @@ class Payment {
                                 "config"=>WeChat::Script()->getJsSign(Request::post("url","") ? Request::post("url","") : Request::domain())
                             ]
                         ];
+
                     }catch(\Exception $e){
                         $result = [
                             "pay"=>99,

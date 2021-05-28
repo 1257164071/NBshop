@@ -123,9 +123,14 @@ export const province = [{
 	"text": "云南省",
 	"parentId": 0
 },
+// {
+// 	"value": 2816,
+// 	"text": "西藏自治区",
+// 	"parentId": 0
+// },
 {
-	"value": 2816,
-	"text": "西藏自治区",
+	"value": 3178,
+	"text": "宁夏回族自治区",
 	"parentId": 0
 },
 {

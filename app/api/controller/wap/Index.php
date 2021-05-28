@@ -101,14 +101,21 @@ class Index extends Base {
                 "image"=>Tool::thumb($res["photo"],"",true)
             ];
         },Db::name("data_item")->where("pid",$adTwo["id"])->order("sort","ASC")->select()->toArray());
+        $user_id = Db::name("users_token")->where("token",Request::header('Auth-Token'))->value('user_id');
 
-        $hot = array_map(function ($res){
+        if (!\app\common\model\users\Users::where(['id' => $user_id])->value('is_consumption')) {
+            $keyname = 'first_price';
+        } else {
+            $keyname = 'sell_price';
+        }
+
+        $hot = array_map(function ($res)use ($keyname){
                 return [
                     "id"=> $res["id"],
                     "url"=>'/goods/view/'.$res["id"],
                     "name"=>$res["title"],
                     "image"=>Tool::thumb($res["photo"],"",true),
-                    "price"=>$res["sell_price"]
+                    "price"=>$res[$keyname]
                 ];
             },
             Db::name("goods_extends")

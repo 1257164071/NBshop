@@ -80,7 +80,7 @@
                                         <td><input type="text" name="product_market_price" value="{$data.market_price|default=''}" required  lay-verify="required" placeholder="请输入市场价格" autocomplete="off" class="layui-input"></td>
                                         <td><input type="text" name="product_cost_price" value="{$data.cost_price|default=''}" required  lay-verify="required" placeholder="请输入成本价格" autocomplete="off" class="layui-input"></td>
                                         <td><input type="text" name="product_weight" value="{$data.goods_weight|default=''}" required  lay-verify="required" placeholder="请输入重量(克)" autocomplete="off" class="layui-input"></td>
-                                        <td><input type="text" name="product_store_nums" value="{$data.store_nums|default=''}" required  lay-verify="required" placeholder="请输入库存" autocomplete="off" class="layui-input"></td>
+                                        <td><input type="text" name="product_fake_sale" value="{$data.store_nums|default=''}" required  lay-verify="required" placeholder="请输入销量" autocomplete="off" class="layui-input"></td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -287,7 +287,7 @@
                 <th>市场价格</th>
                 <th>成本价格</th>
                 <th>重量(克)</th>
-                <th>库存</th>
+                <th>库存11</th>
             </tr>
         </thead>
         <tbody>
@@ -298,6 +298,7 @@
                 <td><input type="text" name="set_cost_price" value="" placeholder="请输入成本价格" autocomplete="off" class="layui-input"></td>
                 <td><input type="text" name="set_goods_weight" value="" placeholder="请输入重量(克)" autocomplete="off" class="layui-input"></td>
                 <td><input type="text" name="set_store_nums" value="" placeholder="请输入库存" autocomplete="off" class="layui-input"></td>
+                <td><input type="text" name="set_fake_sale" value="" placeholder="请输入销量" autocomplete="off" class="layui-input"></td>
             </tr>
         </tbody>
     </table>

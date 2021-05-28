@@ -11,31 +11,31 @@
     <div class="layui-card">
         <div class="layui-card-body">
             <form class="layui-form layui-form-pane" action="">
-                
+
                 <div class="layui-form-item">
-                    
+
                     <div class="layui-inline">
                         <label class="layui-form-label seller-inline-2">查找类型：</label>
                         <div class="layui-input-inline seller-inline-4">
                         <select name="type">
                             <option value="0">订单号</option>
                             <option value="1">用户名</option>
-                        </select>   
+                        </select>
                         </div>
                     </div>
-                    
+
                     <div class="layui-inline">
                         <label class="layui-form-label seller-inline-2">关键字：</label>
                         <div class="layui-input-inline seller-inline-4">
                             <input type="text" name="title" placeholder="请输入关键字" autocomplete="off" class="layui-input">
                         </div>
                     </div>
-                    
+
                     <div class="layui-inline">
                         <button type="button" id="search-btn" class="layui-btn layui-btn-sm layui-bg-light-blue"><i class="layui-icon layui-icon-search"></i> 搜索</button>
                     </div>
                 </div>
-                
+
             </form>
         </div>
     </div>
@@ -72,7 +72,7 @@ layui.use(['table','form'], function () {
                   {type: 'checkbox'}
                 , {field: 'order_no', title: '订单号',align:'center',width:180}
                 , {field: 'username', title: '用户名'}
-                , {field: 'name', title: '收货人',width:120,align:'center'}
+                , {field: 'accept_name', title: '收货人',width:120,align:'center'}
                 , {field: 'distribution_code', title: '物流单号',width:120,align:'center'}
                 , {field: 'title', title: '物流公司',width:120,align:'center'}
                 , {field: 'freight', title: '运费',width:120,align:'center'}
@@ -115,7 +115,7 @@ layui.use(['table','form'], function () {
             window.location.href = '{:createUrl("detail")}?id='+data.id;
         }
     });
-    
+
 });
 </script>
 

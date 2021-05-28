@@ -34,6 +34,18 @@
                             <input type="text" name="title" placeholder="请输入用户名" autocomplete="off" class="layui-input">
                         </div>
                     </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label seller-inline-2">昵称：</label>
+                        <div class="layui-input-inline seller-inline-4">
+                            <input type="text" name="nickname" placeholder="请输入用户名" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label seller-inline-2">手机号：</label>
+                        <div class="layui-input-inline seller-inline-4">
+                            <input type="text" name="mobile" placeholder="请输入手机号" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
 
                     <div class="layui-inline">
                         <button type="button" id="search-btn" class="layui-btn layui-btn-sm layui-bg-light-blue"><i class="layui-icon layui-icon-search"></i> 搜索</button>
@@ -115,7 +127,9 @@
                 ,where: {
                     key: {
                         cat_id : $('[name="cat_id"]').val(),
-                        title : $('[name="title"]').val()
+                        title : $('[name="title"]').val(),
+                        mobile : $('[name="mobile"]').val(),
+                        nickname : $('[name="nickname"]').val(),
                     }
                 }
             }, 'data');

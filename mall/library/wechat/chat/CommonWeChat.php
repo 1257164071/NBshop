@@ -26,6 +26,11 @@ class CommonWeChat {
         try {
             return $this->json2arr($this->get($url));
         } catch (\Exception $e) {
+            if ($e->getCode() == 40001){
+                $cache = $this->config["appid"] . '_access_token';
+                Cache::delete($cache);
+                throw new \Exception('出错了!请再试一次', $e->getCode());
+            }
             throw new \Exception($e->getMessage(), $e->getCode());
         }
     }

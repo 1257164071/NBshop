@@ -12,6 +12,7 @@ use app\common\model\users\Users as UserModel;
 use mall\library\wechat\chat\WeChat;
 use mall\library\wechat\chat\WeConfig;
 use mall\library\wechat\mini\WeMini;
+use PHPMailer\PHPMailer\Exception;
 use think\facade\Db;
 use think\facade\Request;
 use mall\basic\Token;
@@ -53,6 +54,10 @@ class OAuth extends Base {
             $condition["unionid"] = $user["unionid"];
         }else{
             $condition["openid"] = $user['openid'];
+        }
+        $wechat = Db::name("wechat_users")->where($condition)->find();
+        if ($wechat == null&&$parent_id==''){
+                throw new \Exception("抱歉,您还没有推荐人无法注册！",0);
         }
 
         if(($row=Db::name("wechat_users")->where($condition)->find()) != false){
